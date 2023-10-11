@@ -22,8 +22,6 @@ public class IslandImpl implements Island {
     @Getter
     private final String id;
     @Getter
-    private final String islandNumber;
-    @Getter
     private final String name;
     @Getter
     private final String coverUrl;
@@ -41,7 +39,6 @@ public class IslandImpl implements Island {
     public IslandImpl(Gateway gateway, JsonObject info) {
         this.gateway = gateway;
         this.id = info.get("islandSourceId").getAsString();
-        this.islandNumber = info.get("islandId").getAsString();
         this.name = info.get("islandName").getAsString();
         this.coverUrl = info.get("coverUrl").getAsString();
         this.memberCount = info.get("memberCount").getAsInt();

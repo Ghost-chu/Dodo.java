@@ -7,8 +7,6 @@ import java.util.List;
 public interface Island {
 
     String getId();
-    String getIslandNumber();
-
     String getName();
 
     String getCoverUrl();
