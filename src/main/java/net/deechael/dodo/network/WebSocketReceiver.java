@@ -70,7 +70,13 @@ public class WebSocketReceiver extends Receiver {
 
     private void websocketStart(String url) {
         LOGGER.debug("Starting websocket...");
-        WebSocket webSocket = getClient().newWebSocket(new Request.Builder().get().url(url).build(), this.listener);
+        WebSocket webSocket = getClient().newWebSocket(
+                new Request.Builder()
+                        .get()
+                        .header("Content-type", "application/json;charset=utf-8")
+                        .header("Content-Encoding", "UTF-8")
+                        .url(url)
+                        .build(), this.listener);
     }
 
     private static final class PacketListener extends WebSocketListener {
@@ -91,7 +97,7 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-            JsonObject object = JsonParser.parseString(new String(text.getBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
+            JsonObject object = JsonParser.parseString(text).getAsJsonObject();
             if (object.get("type").getAsInt() != 0)
                 return;
             receiver.solver.apply(object);
@@ -99,7 +105,7 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
-            this.onMessage(webSocket, new String(bytes.toByteArray()));
+            this.onMessage(webSocket, new String(bytes.toByteArray(),StandardCharsets.UTF_8));
         }
 
         @Override
