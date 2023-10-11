@@ -1,9 +1,7 @@
 package net.deechael.dodo.event;
 
 import com.google.gson.JsonObject;
-import net.deechael.dodo.api.Client;
-import net.deechael.dodo.api.Member;
-import net.deechael.dodo.api.MessageContext;
+import net.deechael.dodo.api.*;
 import net.deechael.dodo.content.Message;
 import net.deechael.dodo.event.channel.*;
 import net.deechael.dodo.event.channel.ChannelMessageEvent.Reference;
@@ -72,15 +70,12 @@ public class EventManager {
     }
 
     public void callEvent(JsonObject eventJson) {
-        System.out.println("Response: "+eventJson.toString());
         String id = string(eventJson, "eventId");
         String eventType = string(eventJson, "eventType");
         long timestamp = getLong(eventJson, "timestamp");
         eventJson = eventJson.getAsJsonObject("eventBody");
         if (Objects.equals(eventType, "2001")) {
-            System.out.println("Message 2001");
             if (!handlers.containsKey(ChannelMessageEvent.class)) {
-                System.out.println("Event no handlers");
                 return;
             }
             String islandId = string(eventJson, "islandSourceId");
@@ -90,18 +85,18 @@ public class EventManager {
             Member member = client.fetchMember(islandId, dodoId);
             // Reference
             JsonObject refObject = eventJson.getAsJsonObject("reference");
-            Reference reference = new Reference(string(refObject, "messageId"),
-                    string(refObject, "dodoSourceId"),
-                    string(refObject, "nickName"));
-
+            Reference reference = null;
+            if(refObject != null && !refObject.isJsonNull()) {
+                reference = new Reference(string(refObject, "messageId"),
+                        string(refObject, "dodoSourceId"),
+                        string(refObject, "nickName"));
+            }
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
             Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
-
             MessageContext context = new MessageContextImpl(timestamp, messageId, body,
                     member, client.fetchChannel(islandId, channelId), client.fetchIsland(islandId));
             ChannelMessageEvent event = new ChannelMessageEvent(id, timestamp, context, islandId,
                     channelId, dodoId, messageId, member, reference, type, body);
-            System.out.println("Calling message event");
             fireEvent(ChannelMessageEvent.class, event);
         } else if (Objects.equals(eventType, "3001")) {
             if (!handlers.containsKey(MessageReactionEvent.class))
