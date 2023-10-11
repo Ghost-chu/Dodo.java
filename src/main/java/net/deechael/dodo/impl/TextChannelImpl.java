@@ -15,7 +15,7 @@ public class TextChannelImpl extends ChannelImpl implements TextChannel {
 
     @Override
     public String send(Message content) {
-        Route route = API.V1.Channel.messageSend()
+        Route route = API.V2.Channel.messageSend()
                 .param("channelId", getId())
                 .param("messageType", content.getType().getCode())
                 .param("messageBody", content.get());
@@ -24,7 +24,7 @@ public class TextChannelImpl extends ChannelImpl implements TextChannel {
 
     @Override
     public String send(Message content, String repliedMessageId) {
-        Route route = API.V1.Channel.messageSend()
+        Route route = API.V2.Channel.messageSend()
                 .param("channelId", getId())
                 .param("messageType", content.getType().getCode())
                 .param("messageBody", content.get())
@@ -34,17 +34,17 @@ public class TextChannelImpl extends ChannelImpl implements TextChannel {
 
     @Override
     public String sendPrivate(Message content, String dodoId) {
-        Route route = API.V1.Channel.messageSend()
+        Route route = API.V2.Channel.messageSend()
                 .param("channelId", getId())
                 .param("messageType", content.getType().getCode())
                 .param("messageBody", content.get())
-                .param("dodoId", dodoId);
+                .param("dodoSourceId", dodoId);
         return gateway.executeRequest(route).getAsJsonObject().get("messageId").getAsString();
     }
 
     @Override
     public void addReaction(String messageId, String emoji) {
-        Route route = API.V1.Channel.messageSend()
+        Route route = API.V2.Channel.messageSend()
                 .param("messageId", getId())
                 .param("emoji", emoji);
         gateway.executeRequest(route);
@@ -52,7 +52,7 @@ public class TextChannelImpl extends ChannelImpl implements TextChannel {
 
     @Override
     public void removeReaction(String messageId, String emoji) {
-        Route route = API.V1.Channel.messageSend()
+        Route route = API.V2.Channel.messageSend()
                 .param("messageId", getId())
                 .param("emoji", emoji);
         gateway.executeRequest(route);
@@ -60,10 +60,10 @@ public class TextChannelImpl extends ChannelImpl implements TextChannel {
 
     @Override
     public void removeReaction(String messageId, String emoji, String dodoId) {
-        Route route = API.V1.Channel.messageSend()
+        Route route = API.V2.Channel.messageSend()
                 .param("messageId", getId())
                 .param("emoji", emoji)
-                .param("dodoId", dodoId);
+                .param("dodoSourceId", dodoId);
         gateway.executeRequest(route);
     }
 

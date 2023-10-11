@@ -13,7 +13,6 @@ import net.deechael.dodo.gate.Gateway;
 import net.deechael.dodo.network.Requester;
 import net.deechael.dodo.network.Route;
 import net.deechael.dodo.network.WebSocketReceiver;
-import net.deechael.dodo.types.ChannelType;
 import net.deechael.dodo.types.MessageType;
 import okhttp3.OkHttpClient;
 
@@ -68,16 +67,16 @@ public class ClientImpl implements Client {
 
     @Override
     public Island fetchIsland(String islandId) {
-        Route route = API.V1.Island.info()
-                .param("islandId", islandId);
+        Route route = API.V2.Island.info()
+                .param("islandSourceId", islandId);
         JsonObject info = gateway.executeRequest(route).getAsJsonObject();
         return new IslandImpl(gateway, info);
     }
 
     @Override
     public Channel fetchChannel(String islandId, String channelId) {
-        Route route = API.V1.Channel.info()
-                .param("islandId", islandId)
+        Route route = API.V2.Channel.info()
+                .param("islandSourceId", islandId)
                 .param("channelId", channelId);
         JsonObject info = gateway.executeRequest(route).getAsJsonObject();
         if (info.get("channelType").getAsInt() == 1) {
@@ -91,23 +90,23 @@ public class ClientImpl implements Client {
 
     @Override
     public Member fetchMember(String islandId, String dodoId) {
-        Route route = API.V1.Member.info()
-                .param("islandId", islandId)
-                .param("dodoId", dodoId);
+        Route route = API.V2.Member.info()
+                .param("islandSourceId", islandId)
+                .param("dodoSourceId", dodoId);
         JsonObject info = gateway.executeRequest(route).getAsJsonObject();
-        info.addProperty("islandId", islandId);
+        info.addProperty("islandSourceId", islandId);
         return new MemberImpl(gateway, info);
     }
 
     @Override
     public String uploadImage(File imageFile) {
-        Route route = API.V1.Resource.pictureUpload().param("file", imageFile);
+        Route route = API.V2.Resource.pictureUpload().param("file", imageFile);
         return this.gateway.executeRequest(route).getAsJsonObject().get("url").getAsString();
     }
 
     @Override
     public String updateMessage(String messageId, Message content) {
-        Route route = API.V1.Channel.messageEdit()
+        Route route = API.V2.Channel.messageEdit()
                 .param("messageId", messageId)
                 .param("messageType", content.getType().getCode())
                 .param("messageBody", content.get());
@@ -121,9 +120,9 @@ public class ClientImpl implements Client {
                 try {
                     long timestamp = data.get("timestamp").getAsLong();
                     JsonObject eventJson = data.getAsJsonObject("eventBody");
-                    String islandId = string(eventJson, "islandId");
+                    String islandId = string(eventJson, "islandSourceId");
                     String channelId = string(eventJson, "channelId");
-                    String dodoId = string(eventJson, "dodoId");
+                    String dodoId = string(eventJson, "dodoSourceId");
                     String messageId = string(eventJson, "messageId");
                     Member member = this.fetchMember(islandId, dodoId);
 

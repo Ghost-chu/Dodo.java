@@ -46,8 +46,8 @@ public class MemberImpl implements Member {
 
     public MemberImpl(Gateway gateway, JsonObject info) {
         this.gateway = gateway;
-        this.id = info.get("dodoId").getAsString();
-        this.islandId = info.get("islandId").getAsString();
+        this.id = info.get("dodoSourceId").getAsString();
+        this.islandId = info.get("islandSourceId").getAsString();
         this.nickname = info.get("nickName").getAsString();
         this.personalNickname = info.get("personalNickName").getAsString();
         this.avatarUrl = info.get("avatarUrl").getAsString();
@@ -61,15 +61,15 @@ public class MemberImpl implements Member {
 
     @Override
     public List<Role> getRoles() {
-        Route route = API.V1.Member.roleList()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId());
+        Route route = API.V2.Member.roleList()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId());
         List<Role> roles = new ArrayList<>();
         try {
             JsonArray array = gateway.executeRequest(route).getAsJsonArray();
             for (JsonElement element : array) {
                 JsonObject object = element.getAsJsonObject();
-                object.addProperty("islandId", getIslandId());
+                object.addProperty("islandSourceId", getIslandId());
                 roles.add(new RoleImpl(gateway, object));
             }
         } catch (Exception e) {
@@ -80,27 +80,27 @@ public class MemberImpl implements Member {
 
     @Override
     public void setNickname(String nickname) {
-        Route route = API.V1.Member.nicknameEdit()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Member.nicknameEdit()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("nickName", nickname);
         gateway.executeRequest(route);
     }
 
     @Override
     public void mute(int seconds) {
-        Route route = API.V1.Member.muteAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Member.muteAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("duration", seconds);
         gateway.executeRequest(route);
     }
 
     @Override
     public void mute(int seconds, String reason) {
-        Route route = API.V1.Member.muteAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Member.muteAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("duration", seconds)
                 .param("reason", reason);
         gateway.executeRequest(route);
@@ -108,43 +108,43 @@ public class MemberImpl implements Member {
 
     @Override
     public void unmute() {
-        Route route = API.V1.Member.muteRemove()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId());
+        Route route = API.V2.Member.muteRemove()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId());
         gateway.executeRequest(route);
     }
 
     @Override
     public void ban() {
-        Route route = API.V1.Member.banAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId());
+        Route route = API.V2.Member.banAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId());
         gateway.executeRequest(route);
     }
 
     @Override
     public void ban(String reason) {
-        Route route = API.V1.Member.banAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Member.banAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("reason", reason);
         gateway.executeRequest(route);
     }
 
     @Override
     public void banNotice(String channelId) {
-        Route route = API.V1.Member.banAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Member.banAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("noticeChannelId", channelId);
         gateway.executeRequest(route);
     }
 
     @Override
     public void banNotice(String channelId, String reason) {
-        Route route = API.V1.Member.banAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Member.banAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("noticeChannelId", channelId)
                 .param("reason", reason);
         gateway.executeRequest(route);
@@ -152,16 +152,16 @@ public class MemberImpl implements Member {
 
     @Override
     public void unban() {
-        Route route = API.V1.Member.banRemove()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId());
+        Route route = API.V2.Member.banRemove()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId());
         gateway.executeRequest(route);
     }
 
     @Override
     public void send(Message content) {
-        Route route = API.V1.Personal.messageSend()
-                .param("dodoId", getId())
+        Route route = API.V2.Personal.messageSend()
+                .param("dodoSourceId", getId())
                 .param("messageType", content.getType().getCode())
                 .param("messageBody", content.get());
         gateway.executeRequest(route);
@@ -169,18 +169,18 @@ public class MemberImpl implements Member {
 
     @Override
     public void addRole(String roleId) {
-        Route route = API.V1.Role.memberAdd()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Role.memberAdd()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("roleId", roleId);
         gateway.executeRequest(route);
     }
 
     @Override
     public void removeRole(String roleId) {
-        Route route = API.V1.Role.memberRemove()
-                .param("islandId", getIslandId())
-                .param("dodoId", getId())
+        Route route = API.V2.Role.memberRemove()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
                 .param("roleId", roleId);
         gateway.executeRequest(route);
     }

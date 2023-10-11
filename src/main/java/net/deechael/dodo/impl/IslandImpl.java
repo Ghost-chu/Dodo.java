@@ -22,6 +22,8 @@ public class IslandImpl implements Island {
     @Getter
     private final String id;
     @Getter
+    private final String islandNumber;
+    @Getter
     private final String name;
     @Getter
     private final String coverUrl;
@@ -38,7 +40,8 @@ public class IslandImpl implements Island {
 
     public IslandImpl(Gateway gateway, JsonObject info) {
         this.gateway = gateway;
-        this.id = info.get("islandId").getAsString();
+        this.id = info.get("islandSourceId").getAsString();
+        this.islandNumber = info.get("islandId").getAsString();
         this.name = info.get("islandName").getAsString();
         this.coverUrl = info.get("coverUrl").getAsString();
         this.memberCount = info.get("memberCount").getAsInt();
@@ -54,14 +57,14 @@ public class IslandImpl implements Island {
         long maxId = 0;
         int times = this.memberCount % 100 == 0 ? this.memberCount / 100 : this.memberCount / 100 + 1;
         for (int i = 0; i < times; i++) {
-            JsonObject data = gateway.executeRequest(API.V1.Island.list()
-                    .param("islandId", getId())
+            JsonObject data = gateway.executeRequest(API.V2.Island.list()
+                    .param("islandSourceId", getId())
                     .param("pageSize", 100)
                     .param("maxId", maxId)).getAsJsonObject();
             maxId = data.get("maxId").getAsLong();
             for (JsonElement element : data.getAsJsonArray("list")) {
                 JsonObject jsonObject = element.getAsJsonObject();
-                jsonObject.addProperty("islandId", getId());
+                jsonObject.addProperty("islandSourceId", getId());
                 members.add(new MemberImpl(gateway, jsonObject));
             }
         }
@@ -74,13 +77,13 @@ public class IslandImpl implements Island {
         long maxId = 0;
         int times = this.memberCount % 100 == 0 ? this.memberCount / 100 : this.memberCount / 100 + 1;
         for (int i = 0; i < times; i++) {
-            JsonObject data = gateway.executeRequest(API.V1.Island.muteList()
-                    .param("islandId", getId())
+            JsonObject data = gateway.executeRequest(API.V2.Island.muteList()
+                    .param("islandSourceId", getId())
                     .param("pageSize", 100)
                     .param("maxId", maxId)).getAsJsonObject();
             maxId = data.get("maxId").getAsLong();
             for (JsonElement element : data.getAsJsonArray("list")) {
-                muted.add(element.getAsJsonObject().get("dodoId").getAsString());
+                muted.add(element.getAsJsonObject().get("dodoSourceId").getAsString());
             }
         }
         return muted;
@@ -92,13 +95,13 @@ public class IslandImpl implements Island {
         long maxId = 0;
         int times = this.memberCount % 100 == 0 ? this.memberCount / 100 : this.memberCount / 100 + 1;
         for (int i = 0; i < times; i++) {
-            JsonObject data = gateway.executeRequest(API.V1.Island.banList()
-                    .param("islandId", getId())
+            JsonObject data = gateway.executeRequest(API.V2.Island.banList()
+                    .param("islandSourceId", getId())
                     .param("pageSize", 100)
                     .param("maxId", maxId)).getAsJsonObject();
             maxId = data.get("maxId").getAsLong();
             for (JsonElement element : data.getAsJsonArray("list")) {
-                banned.add(element.getAsJsonObject().get("dodoId").getAsString());
+                banned.add(element.getAsJsonObject().get("dodoSourceId").getAsString());
             }
         }
         return banned;
@@ -107,11 +110,11 @@ public class IslandImpl implements Island {
     @Override
     public List<Channel> getChannels() {
         List<Channel> channels = new ArrayList<>();
-        Route route = API.V1.Channel.list()
-                .param("islandId", getId());
+        Route route = API.V2.Channel.list()
+                .param("islandSourceId", getId());
         for (JsonElement element : gateway.executeRequest(route).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();
-            object.addProperty("islandId", getId());
+            object.addProperty("islandSourceId", getId());
             if (object.get("channelType").getAsInt() == 1) {
                 channels.add(new TextChannelImpl(gateway, object));
             } else if (object.get("channelType").getAsInt() == 2) {
@@ -126,11 +129,11 @@ public class IslandImpl implements Island {
     @Override
     public List<Role> getRoles() {
         List<Role> roles = new ArrayList<>();
-        Route route = API.V1.Role.list()
-                .param("islandId", getId());
+        Route route = API.V2.Role.list()
+                .param("islandSourceId", getId());
         for (JsonElement element : gateway.executeRequest(route).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();
-            object.addProperty("islandId", getId());
+            object.addProperty("islandSourceId", getId());
             roles.add(new RoleImpl(gateway, object));
         }
         return roles;
@@ -138,16 +141,16 @@ public class IslandImpl implements Island {
 
     @Override
     public String createRole(String name) {
-        Route route = API.V1.Role.add()
-                .param("islandId", getId())
+        Route route = API.V2.Role.add()
+                .param("islandSourceId", getId())
                 .param("name", name);
         return gateway.executeRequest(route).getAsJsonObject().get("roleId").getAsString();
     }
 
     @Override
     public String createChannel(String name, ChannelType type) {
-        Route route = API.V1.Channel.add()
-                .param("islandId", getId())
+        Route route = API.V2.Channel.add()
+                .param("islandSourceId", getId())
                 .param("channelName", name)
                 .param("channelType", type.getCode());
         return gateway.executeRequest(route).getAsJsonObject().get("channelId").getAsString();

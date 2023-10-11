@@ -35,16 +35,16 @@ public class VoiceChannelImpl extends ChannelImpl implements VoiceChannel {
 
     @Override
     public void move(Member member) {
-        gateway.executeRequest(API.V1.Channel.voiceMemberMove()
-                .param("islandId", getIslandId())
-                .param("dodoId", member.getId())
+        gateway.executeRequest(API.V2.Channel.voiceMemberMove()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", member.getId())
                 .param("channelId", getId()));
     }
 
     private void operate(Member member, VoiceChannelOperationType operationType) {
-        gateway.executeRequest(API.V1.Channel.voiceMemberEdit()
+        gateway.executeRequest(API.V2.Channel.voiceMemberEdit()
                 .param("channelId", this.getId())
-                .param("dodoId", member.getId())
+                .param("dodoSourceId", member.getId())
                 .param("operateType", operationType.getCode()));
     }
 

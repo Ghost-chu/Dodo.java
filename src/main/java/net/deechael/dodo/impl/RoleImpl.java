@@ -26,7 +26,7 @@ public class RoleImpl implements Role {
 
     public RoleImpl(Gateway gateway, JsonObject info) {
         this.gateway = gateway;
-        this.islandId = info.get("islandId").getAsString();
+        this.islandId = info.get("islandSourceId").getAsString();
         this.id = info.get("roleId").getAsString();
         this.name = info.get("roleName").getAsString();
         this.color = info.get("roleColor").getAsString();
@@ -36,8 +36,8 @@ public class RoleImpl implements Role {
 
     @Override
     public void setName(String name) {
-        Route route = API.V1.Role.edit()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Role.edit()
+                .param("islandSourceId", getIslandId())
                 .param("roleId", getId())
                 .param("roleName", name);
         gateway.executeRequest(route);
@@ -45,8 +45,8 @@ public class RoleImpl implements Role {
 
     @Override
     public void setColor(String color) {
-        Route route = API.V1.Role.edit()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Role.edit()
+                .param("islandSourceId", getIslandId())
                 .param("roleId", getId())
                 .param("roleColor", color);
         gateway.executeRequest(route);
@@ -54,8 +54,8 @@ public class RoleImpl implements Role {
 
     @Override
     public void setPosition(int position) {
-        Route route = API.V1.Role.edit()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Role.edit()
+                .param("islandSourceId", getIslandId())
                 .param("roleId", getId())
                 .param("position", position);
         gateway.executeRequest(route);
@@ -63,8 +63,8 @@ public class RoleImpl implements Role {
 
     @Override
     public void setPermission(String permission) {
-        Route route = API.V1.Role.edit()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Role.edit()
+                .param("islandSourceId", getIslandId())
                 .param("roleId", getId())
                 .param("permission", permission);
         gateway.executeRequest(route);
@@ -72,8 +72,8 @@ public class RoleImpl implements Role {
 
     @Override
     public void remove() {
-        Route route = API.V1.Role.remove()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Role.remove()
+                .param("islandSourceId", getIslandId())
                 .param("roleId", getId());
         gateway.executeRequest(route);
     }

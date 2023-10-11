@@ -72,22 +72,26 @@ public class EventManager {
     }
 
     public void callEvent(JsonObject eventJson) {
+        System.out.println("Response: "+eventJson.toString());
         String id = string(eventJson, "eventId");
         String eventType = string(eventJson, "eventType");
         long timestamp = getLong(eventJson, "timestamp");
         eventJson = eventJson.getAsJsonObject("eventBody");
         if (Objects.equals(eventType, "2001")) {
-            if (!handlers.containsKey(ChannelMessageEvent.class))
+            System.out.println("Message 2001");
+            if (!handlers.containsKey(ChannelMessageEvent.class)) {
+                System.out.println("Event no handlers");
                 return;
-            String islandId = string(eventJson, "islandId");
+            }
+            String islandId = string(eventJson, "islandSourceId");
             String channelId = string(eventJson, "channelId");
-            String dodoId = string(eventJson, "dodoId");
+            String dodoId = string(eventJson, "dodoSourceId");
             String messageId = string(eventJson, "messageId");
             Member member = client.fetchMember(islandId, dodoId);
             // Reference
             JsonObject refObject = eventJson.getAsJsonObject("reference");
             Reference reference = new Reference(string(refObject, "messageId"),
-                    string(refObject, "dodoId"),
+                    string(refObject, "dodoSourceId"),
                     string(refObject, "nickName"));
 
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
@@ -97,13 +101,14 @@ public class EventManager {
                     member, client.fetchChannel(islandId, channelId), client.fetchIsland(islandId));
             ChannelMessageEvent event = new ChannelMessageEvent(id, timestamp, context, islandId,
                     channelId, dodoId, messageId, member, reference, type, body);
+            System.out.println("Calling message event");
             fireEvent(ChannelMessageEvent.class, event);
         } else if (Objects.equals(eventType, "3001")) {
             if (!handlers.containsKey(MessageReactionEvent.class))
                 return;
-            String islandId = string(eventJson, "islandId");
+            String islandId = string(eventJson, "islandSourceId");
             String channelId = string(eventJson, "channelId");
-            String dodoId = string(eventJson, "dodoId");
+            String dodoId = string(eventJson, "dodoSourceId");
             String messageId = string(eventJson, "messageId");
             Member member = client.fetchMember(islandId, dodoId);
             String targetId = string(eventJson.getAsJsonObject("reactionTarget"), "id");
@@ -115,9 +120,9 @@ public class EventManager {
         } else if (Objects.equals(eventType, "3002")) {
             if (!handlers.containsKey(CardMessageButtonClickEvent.class))
                 return;
-            String islandId = string(eventJson, "islandId");
+            String islandId = string(eventJson, "islandSourceId");
             String channelId = string(eventJson, "channelId");
-            String dodoId = string(eventJson, "dodoId");
+            String dodoId = string(eventJson, "dodoSourceId");
             String messageId = string(eventJson, "messageId");
             Member member = client.fetchMember(islandId, dodoId);
             String interactCustomId = eventJson.has("interactCustomId") ? string(eventJson, "interactCustomId") : "";
@@ -128,9 +133,9 @@ public class EventManager {
         } else if (Objects.equals(eventType, "3003")) {
             if (!handlers.containsKey(CardMessageFormSubmitEvent.class))
                 return;
-            String islandId = string(eventJson, "islandId");
+            String islandId = string(eventJson, "islandSourceId");
             String channelId = string(eventJson, "channelId");
-            String dodoId = string(eventJson, "dodoId");
+            String dodoId = string(eventJson, "dodoSourceId");
             String messageId = string(eventJson, "messageId");
             Member member = client.fetchMember(islandId, dodoId);
             String interactCustomId = eventJson.has("interactCustomId") ? string(eventJson, "interactCustomId") : "";
@@ -140,9 +145,9 @@ public class EventManager {
         } else if (Objects.equals(eventType, "3004")) {
             if (!handlers.containsKey(CardMessageListSubmitEvent.class))
                 return;
-            String islandId = string(eventJson, "islandId");
+            String islandId = string(eventJson, "islandSourceId");
             String channelId = string(eventJson, "channelId");
-            String dodoId = string(eventJson, "dodoId");
+            String dodoId = string(eventJson, "dodoSourceId");
             String messageId = string(eventJson, "messageId");
             Member member = client.fetchMember(islandId, dodoId);
             String interactCustomId = eventJson.has("interactCustomId") ? string(eventJson, "interactCustomId") : "";
@@ -152,8 +157,8 @@ public class EventManager {
         } else if (Objects.equals(eventType, "4001")) {
             if (!handlers.containsKey(MemberJoinEvent.class))
                 return;
-            String islandId = string(eventJson, "islandId");
-            String dodoId = string(eventJson, "dodoId");
+            String islandId = string(eventJson, "islandSourceId");
+            String dodoId = string(eventJson, "dodoSourceId");
             Member member = client.fetchMember(islandId, dodoId);
             String modifyTime = string(eventJson, "modifyTime");
             MemberJoinEvent event = new MemberJoinEvent(id, timestamp, member, islandId, dodoId, modifyTime);
@@ -161,8 +166,8 @@ public class EventManager {
         } else if (Objects.equals(eventType, "4002")) {
             if (!handlers.containsKey(MemberLeaveEvent.class))
                 return;
-            String islandId = string(eventJson, "islandId");
-            String dodoId = string(eventJson, "dodoId");
+            String islandId = string(eventJson, "islandSourceId");
+            String dodoId = string(eventJson, "dodoSourceId");
             Member member = client.fetchMember(islandId, dodoId);
             LeaveType leaveType = integer(eventJson, "leaveType") == 1 ? LeaveType.SELF : LeaveType.KICKED;
             String operator = string(eventJson, "operateDoDoId");
@@ -172,7 +177,7 @@ public class EventManager {
         } else if (Objects.equals(eventType, "1001")) {
             if (!handlers.containsKey(PersonalMessageEvent.class))
                 return;
-            String dodoId = string(eventJson, "dodoId");
+            String dodoId = string(eventJson, "dodoSourceId");
             //Personal
             JsonObject personalObject = eventJson.getAsJsonObject("personal");
             String nickname = string(personalObject, "nickName");

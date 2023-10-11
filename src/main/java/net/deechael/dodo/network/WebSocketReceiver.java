@@ -41,7 +41,7 @@ public class WebSocketReceiver extends Receiver {
                 .post(RequestBody.create(new byte[0], MediaType.get("application/json")))
                 .header("Authorization", auth)
                 .header("Content-type", "application/json")
-                .url(API.BASE_URL + API.V1.Websocket.connection().getRoute()).build();
+                .url(API.BASE_URL + API.V2.Websocket.connection().getRoute()).build();
         Call call = getClient().newCall(req);
         call.enqueue(new Callback() {
             @Override
@@ -52,7 +52,9 @@ public class WebSocketReceiver extends Receiver {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 LOGGER.debug("Fetched websocket url successfully");
-                JsonObject body = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
+                String resp = Objects.requireNonNull(response.body()).string();
+                JsonObject body = JsonParser.parseString(resp).getAsJsonObject();
+                System.out.println(resp);
                 String url = body.getAsJsonObject("data").get("endpoint").getAsString();
                 LOGGER.debug("Websocket url: " + url);
                 websocketStart(url);

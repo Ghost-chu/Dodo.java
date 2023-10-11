@@ -31,7 +31,7 @@ public class ChannelImpl implements Channel {
         this.id = info.get("channelId").getAsString();
         this.name = info.get("channelName").getAsString();
         this.type = ChannelType.of(info.get("channelType").getAsInt());
-        this.islandId = info.get("islandId").getAsString();
+        this.islandId = info.get("islandSourceId").getAsString();
         this.isDefault = info.get("defaultFlag").getAsInt() == 1;
         this.groupId = info.get("groupId").getAsString();
         this.groupName = info.get("groupName").getAsString();
@@ -44,8 +44,8 @@ public class ChannelImpl implements Channel {
 
     @Override
     public void setName(String name) {
-        Route route = API.V1.Channel.edit()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Channel.edit()
+                .param("islandSourceId", getIslandId())
                 .param("channelId", getId())
                 .param("channelName", name);
         gateway.executeRequest(route);
@@ -53,8 +53,8 @@ public class ChannelImpl implements Channel {
 
     @Override
     public void remove() {
-        Route route = API.V1.Channel.remove()
-                .param("islandId", getIslandId())
+        Route route = API.V2.Channel.remove()
+                .param("islandSourceId", getIslandId())
                 .param("channelId", getId());
         gateway.executeRequest(route);
     }

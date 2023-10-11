@@ -5,7 +5,7 @@ import net.deechael.dodo.network.Route;
 
 public final class API {
 
-    public static final String BASE_URL = "https://botopen.imdodo.com/api/v1/";
+    public static final String BASE_URL = "https://botopen.imdodo.com/api/v2/";
 
     private static final String POST = "POST";
     private static final String GET = "GET";
@@ -13,14 +13,14 @@ public final class API {
     private API() {
     }
 
-    public static class V1 {
+    public static class V2 {
 
         public static class Bot {
 
             @NonParameters
             @Responses({
                     @Response(name = "clientId", type = String.class),
-                    @Response(name = "dodoId", type = String.class),
+                    @Response(name = "dodoSourceId", type = String.class),
                     @Response(name = "nickName", type = String.class),
                     @Response(name = "avatarUrl", type = String.class)
             })
@@ -29,7 +29,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class)
             })
             @NonResponses
             public static Route leave() {
@@ -44,7 +44,7 @@ public final class API {
                     @Response(name = "maxId", type = Object.class)
             }, extra = {
                     @ListItemResponse(name = "list", content = {
-                            @Response(name = "dodoId", type = String.class),
+                            @Response(name = "dodoSourceId", type = String.class),
                             @Response(name = "nickName", type = String.class),
                             @Response(name = "avatarUrl", type = String.class)
                     })
@@ -54,7 +54,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @NonResponses
             public static Route inviteAdd() {
@@ -62,7 +62,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @NonResponses
             public static Route inviteRemove() {
@@ -75,7 +75,7 @@ public final class API {
 
             @NonParameters
             @PagedResponses({
-                    @Response(name = "islandId", type = String.class),
+                    @Response(name = "islandSourceId", type = String.class),
                     @Response(name = "islandName", type = String.class),
                     @Response(name = "coverUrl", type = String.class),
                     @Response(name = "memberCount", type = int.class),
@@ -88,10 +88,10 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class)
             })
             @Responses({
-                    @Response(name = "islandId", type = String.class),
+                    @Response(name = "islandSourceId", type = String.class),
                     @Response(name = "islandName", type = String.class),
                     @Response(name = "coverUrl", type = String.class),
                     @Response(name = "memberCount", type = int.class),
@@ -104,10 +104,10 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class)
             })
             @PagedResponses({
-                    @Response(name = "dodoId", type = String.class),
+                    @Response(name = "dodoSourceId", type = String.class),
                     @Response(name = "nickName", type = String.class),
                     @Response(name = "level", type = int.class),
                     @Response(name = "rank", type = int.class)
@@ -117,7 +117,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "pageSize", type = int.class),
                     @Parameter(name = "maxId", type = long.class)
             })
@@ -125,7 +125,7 @@ public final class API {
                     @Response(name = "maxId", type = Object.class)
             }, extra = {
                     @ListItemResponse(name = "list", content = {
-                            @Response(name = "dodoId", type = String.class)
+                            @Response(name = "dodoSourceId", type = String.class)
                     })
             })
             public static Route muteList() {
@@ -133,7 +133,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "pageSize", type = int.class),
                     @Parameter(name = "maxId", type = long.class)
             })
@@ -141,7 +141,7 @@ public final class API {
                     @Response(name = "maxId", type = Object.class)
             }, extra = {
                     @ListItemResponse(name = "list", content = {
-                            @Response(name = "dodoId", type = String.class)
+                            @Response(name = "dodoSourceId", type = String.class)
                     })
             })
             public static Route banList() {
@@ -153,7 +153,7 @@ public final class API {
         public static class Channel {
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class)
             })
             @PagedResponses({
                     @Response(name = "channelId", type = String.class),
@@ -174,7 +174,7 @@ public final class API {
                     @Response(name = "channelId", type = String.class),
                     @Response(name = "channelName", type = String.class),
                     @Response(name = "channelType", type = int.class),
-                    @Response(name = "islandId", type = String.class),
+                    @Response(name = "islandSourceId", type = String.class),
                     @Response(name = "defaultFlag", type = int.class),
                     @Response(name = "groupId", type = String.class),
                     @Response(name = "groupName", type = String.class)
@@ -184,7 +184,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "channelType", type = int.class, mustBe = "x in (1, 2, 4)")
             })
             @OptionalParameters({
@@ -198,7 +198,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "channelId", type = String.class)
             })
             @OptionalParameters({
@@ -210,7 +210,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "channelId", type = String.class)
             })
             @NonResponses
@@ -225,7 +225,7 @@ public final class API {
             })
             @OptionalParameters({
                     @Parameter(name = "referencedMessageId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @Responses({
                     @Response(name = "messageId", type = String.class),
@@ -269,7 +269,7 @@ public final class API {
                     @Parameter(name = "emoji", type = Object.class)
             })
             @OptionalParameters({
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @NonResponses
             public static Route messageReactionRemove() {
@@ -277,8 +277,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @Responses({
                     @Response(name = "channelId", type = String.class),
@@ -291,8 +291,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "channelId", type = String.class)
             })
             @NonResponses
@@ -302,7 +302,7 @@ public final class API {
 
             @RequiredParameters({
                     @Parameter(name = "channelId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "operateType", type = int.class)
             })
             @NonResponses
@@ -318,7 +318,7 @@ public final class API {
         public static class Role {
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class)
             })
             @PagedResponses({
                     @Response(name = "roleId", type = String.class),
@@ -332,7 +332,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class)
             })
             @OptionalParameters({
                     @Parameter(name = "roleName", type = String.class),
@@ -348,7 +348,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "roleId", type = String.class)
             })
             @OptionalParameters({
@@ -363,7 +363,7 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "roleId", type = String.class)
             })
             @NonResponses
@@ -372,8 +372,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "roleId", type = String.class)
             })
             @NonResponses
@@ -382,8 +382,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "roleId", type = String.class)
             })
             @NonResponses
@@ -396,7 +396,7 @@ public final class API {
         public static class Member {
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "pageSize", type = int.class),
                     @Parameter(name = "maxId", type = long.class)
             })
@@ -404,7 +404,7 @@ public final class API {
                     @Response(name = "maxId", type = Object.class)
             }, extra = {
                     @ListItemResponse(name = "list", content = {
-                            @Response(name = "dodoId", type = String.class),
+                            @Response(name = "dodoSourceId", type = String.class),
                             @Response(name = "nickName", type = String.class),
                             @Response(name = "personalNickName", type = String.class),
                             @Response(name = "AvatarUrl", type = String.class),
@@ -421,12 +421,12 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @Responses({
-                    @Response(name = "islandId", type = String.class),
-                    @Response(name = "dodoId", type = String.class),
+                    @Response(name = "islandSourceId", type = String.class),
+                    @Response(name = "dodoSourceId", type = String.class),
                     @Response(name = "nickName", type = String.class),
                     @Response(name = "personalNickName", type = String.class),
                     @Response(name = "AvatarUrl", type = String.class),
@@ -442,8 +442,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @PagedResponses({
                     @Response(name = "roleId", type = String.class),
@@ -457,11 +457,11 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @Responses({
-                    @Response(name = "dodoId", type = String.class),
+                    @Response(name = "dodoSourceId", type = String.class),
                     @Response(name = "nickName", type = String.class),
                     @Response(name = "invitationCount", type = int.class)
             })
@@ -470,8 +470,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "nickName", type = String.class, mustBe = "len(x) < 32")
             })
             @NonResponses
@@ -480,8 +480,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "duration", type = int.class, description = "second")
             })
             @OptionalParameters({
@@ -493,8 +493,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @NonResponses
             public static Route muteRemove() {
@@ -502,8 +502,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @OptionalParameters({
                     @Parameter(name = "noticeChannelId", type = String.class),
@@ -515,8 +515,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class)
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
             })
             @NonResponses
             public static Route banRemove() {
@@ -524,8 +524,8 @@ public final class API {
             }
 
             @RequiredParameters({
-                    @Parameter(name = "islandId", type = String.class),
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "platform", type = String.class)
             })
             @OptionalParameters({
@@ -546,7 +546,7 @@ public final class API {
         public static class Personal {
 
             @RequiredParameters({
-                    @Parameter(name = "dodoId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "messageType", type = int.class, mustBe = "x in [1, 2, 3]"),
                     @Parameter(name = "messageBody", type = String.class)
             })
