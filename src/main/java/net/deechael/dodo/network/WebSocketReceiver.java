@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class WebSocketReceiver extends Receiver {
@@ -40,7 +41,8 @@ public class WebSocketReceiver extends Receiver {
         Request req = new Request.Builder()
                 .post(RequestBody.create(new byte[0], MediaType.get("application/json")))
                 .header("Authorization", auth)
-                .header("Content-type", "application/json")
+                .header("Content-type", "application/json;charset=utf-8")
+                .header("Content-Encoding", "UTF-8")
                 .url(API.BASE_URL + API.V2.Websocket.connection().getRoute()).build();
         Call call = getClient().newCall(req);
         call.enqueue(new Callback() {
@@ -54,7 +56,6 @@ public class WebSocketReceiver extends Receiver {
                 LOGGER.debug("Fetched websocket url successfully");
                 String resp = Objects.requireNonNull(response.body()).string();
                 JsonObject body = JsonParser.parseString(resp).getAsJsonObject();
-                System.out.println(resp);
                 String url = body.getAsJsonObject("data").get("endpoint").getAsString();
                 LOGGER.debug("Websocket url: " + url);
                 websocketStart(url);
@@ -90,7 +91,7 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-            JsonObject object = JsonParser.parseString(text).getAsJsonObject();
+            JsonObject object = JsonParser.parseString(new String(text.getBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
             if (object.get("type").getAsInt() != 0)
                 return;
             receiver.solver.apply(object);
