@@ -1,16 +1,16 @@
 package net.deechael.dodo.network;
 
-import ch.qos.logback.classic.Level;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.NonNull;
 import net.deechael.dodo.API;
-import net.deechael.dodo.utils.LoggerUtils;
 import net.deechael.useless.function.parameters.Parameter;
 import okhttp3.*;
 import okio.ByteString;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class WebSocketReceiver extends Receiver {
 
-    private final static Logger LOGGER = LoggerUtils.getLogger(WebSocketReceiver.class, Level.DEBUG);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WebSocketReceiver.class);
 
     private final PacketListener listener = new PacketListener(this);
 

@@ -1,19 +1,17 @@
 package net.deechael.dodo.impl;
 
-import ch.qos.logback.classic.Level;
 import net.deechael.dodo.api.Bot;
 import net.deechael.dodo.api.Client;
 import net.deechael.dodo.command.DodoCommand;
 import net.deechael.dodo.event.Listener;
-import net.deechael.dodo.utils.LoggerUtils;
 import org.slf4j.Logger;
-
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DodoBot implements Bot {
 
-    private final static Logger LOGGER = LoggerUtils.getLogger(DodoBot.class, Level.DEBUG);
+    private final static Logger LOGGER = LoggerFactory.getLogger(DodoBot.class);
 
     private final Client client;
 

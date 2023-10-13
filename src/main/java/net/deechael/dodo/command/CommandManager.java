@@ -1,12 +1,11 @@
 package net.deechael.dodo.command;
 
-import ch.qos.logback.classic.Level;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.deechael.dodo.api.MessageContext;
-import net.deechael.dodo.utils.LoggerUtils;
 import net.deechael.dodo.utils.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.event.Level;
 
 import java.util.HashMap;
 import java.util.Map;
