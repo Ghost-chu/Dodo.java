@@ -17,7 +17,6 @@ import net.deechael.dodo.types.MessageType;
 import okhttp3.OkHttpClient;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -137,7 +136,6 @@ public class ClientImpl implements Client {
                     }
                 } catch (Exception ignored) {
                     // To prevent the event won't be fired
-                    ignored.printStackTrace();
                 }
             }
         }

@@ -55,7 +55,7 @@ public class CommandManager {
         String message = messageContent;
         while (message.endsWith(" ")) {
             message = message.substring(0, message.length() - 1);
-            if (message.length() == 0)
+            if (message.isEmpty())
                 break;
         }
         String partToBeChecked;

@@ -9,7 +9,6 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.event.Level;
 
 import java.io.IOException;
 import java.util.Map;
@@ -58,8 +57,7 @@ public class Requester {
         }
         Request req = builder.url(API.BASE_URL + route.getRoute()).build();
         Call call = getClient().newCall(req);
-        try {
-            Response response = call.execute();
+        try (Response response = call.execute()){
             if (!response.isSuccessful())
                 LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
             JsonObject object = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
@@ -137,7 +135,7 @@ public class Requester {
         }
 
         @Override
-        public JsonObject get() throws InterruptedException, ExecutionException {
+        public JsonObject get() {
             while (true) {
                 if (isCancelled() || isDone())
                     break;
@@ -146,7 +144,7 @@ public class Requester {
         }
 
         @Override
-        public JsonObject get(long l, @NotNull TimeUnit timeUnit) throws InterruptedException, ExecutionException, TimeoutException {
+        public JsonObject get(long l, @NotNull TimeUnit timeUnit) {
             long startTime = System.currentTimeMillis();
             long milli = timeUnit.convert(l, TimeUnit.MILLISECONDS);
             while (true) {

@@ -28,7 +28,7 @@ public interface SimpleCommandExecutor extends CommandExecutor {
                                 content = content.substring(0, content.length() - 1);
                             }
                             String[] args;
-                            if (content.length() > 0) {
+                            if (!content.isEmpty()) {
                                 args = content.split(" ");
                             } else {
                                 args = new String[0];

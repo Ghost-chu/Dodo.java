@@ -102,14 +102,14 @@ public class MemorySection implements ConfigurationSection {
 
         StringBuilder builder = new StringBuilder();
         for (ConfigurationSection parent = section; (parent != null) && (parent != relativeTo); parent = parent.getParent()) {
-            if (builder.length() > 0) {
+            if (!builder.isEmpty()) {
                 builder.insert(0, separator);
             }
             builder.insert(0, parent.getName());
         }
 
-        if ((key != null) && (key.length() > 0)) {
-            if (builder.length() > 0) {
+        if ((key != null) && (!key.isEmpty())) {
+            if (!builder.isEmpty()) {
                 builder.append(separator);
             }
 
@@ -289,7 +289,7 @@ public class MemorySection implements ConfigurationSection {
     public Object get(@NotNull String path, @Nullable Object def) {
         Validate.notNull(path, "Path cannot be null");
 
-        if (path.length() == 0) {
+        if (path.isEmpty()) {
             return this;
         }
 
@@ -692,8 +692,7 @@ public class MemorySection implements ConfigurationSection {
         for (Object object : list) {
             if (object instanceof Character) {
                 result.add((Character) object);
-            } else if (object instanceof String) {
-                String str = (String) object;
+            } else if (object instanceof String str) {
 
                 if (str.length() == 1) {
                     result.add(str.charAt(0));
@@ -820,14 +819,12 @@ public class MemorySection implements ConfigurationSection {
     }
 
     protected void mapChildrenKeys(@NotNull Set<String> output, @NotNull ConfigurationSection section, boolean deep) {
-        if (section instanceof MemorySection) {
-            MemorySection sec = (MemorySection) section;
+        if (section instanceof MemorySection sec) {
 
             for (Map.Entry<String, SectionPathData> entry : sec.map.entrySet()) {
                 output.add(createPath(section, entry.getKey(), this));
 
-                if ((deep) && (entry.getValue().getData() instanceof ConfigurationSection)) {
-                    ConfigurationSection subsection = (ConfigurationSection) entry.getValue().getData();
+                if ((deep) && (entry.getValue().getData() instanceof ConfigurationSection subsection)) {
                     mapChildrenKeys(output, subsection, deep);
                 }
             }
@@ -841,8 +838,7 @@ public class MemorySection implements ConfigurationSection {
     }
 
     protected void mapChildrenValues(@NotNull Map<String, Object> output, @NotNull ConfigurationSection section, boolean deep) {
-        if (section instanceof MemorySection) {
-            MemorySection sec = (MemorySection) section;
+        if (section instanceof MemorySection sec) {
 
             for (Map.Entry<String, SectionPathData> entry : sec.map.entrySet()) {
                 // Because of the copyDefaults call potentially copying out of order, we must remove and then add in our saved order

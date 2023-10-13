@@ -17,13 +17,11 @@ public enum MicrophoneSortStatus {
     }
 
     public static MicrophoneSortStatus of(int code) {
-        switch (code) {
-            case 2:
-                return REQUESTING;
-            case 3:
-                return ON;
-        }
-        return OFF;
+        return switch (code) {
+            case 2 -> REQUESTING;
+            case 3 -> ON;
+            default -> OFF;
+        };
     }
 
 }
