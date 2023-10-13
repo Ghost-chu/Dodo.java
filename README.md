@@ -1,3 +1,15 @@
+# Dodo.java - Ghost Fork
+
+此 Fork 基于上游仓库，做出以下改进：
+
+* 升级至 Dodo API v2
+* 修复了 Windows 平台下文本乱码问题（指定 UTF-8 编码）
+* 使用 slf4j api 替换 logback 日志引擎，允许接入任何自己的日志引擎
+* 移除 Brigadier 包，转为使用 Maven 依赖
+* 升级至 Java 17
+
+---
+
 # Dodo.java
 渡渡语音的Java SDK
 
