@@ -4,7 +4,10 @@ plugins {
 }
 
 group'net.deechael'
-version'1.00.4'
+version'1.00.4-legacy'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 repositories {
     mavenCentral()

@@ -57,7 +57,7 @@ public class Route {
             } else if (value instanceof Character) {
                 this.params.addProperty(name, (Character) value);
             } else if (value.getClass().isArray()) {
-                this.params.add(name, JsonParser.parseString(Arrays.toString((Object[]) value)));
+                this.params.add(name,  new JsonParser().parse(Arrays.toString((Object[]) value)));
             } else {
                 this.params.addProperty(name, value.toString());
             }

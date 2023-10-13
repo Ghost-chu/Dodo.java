@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 public class CommandManager {
 
-    private final static Logger LOGGER = LoggerUtils.getLogger(CommandManager.class, Level.DEBUG);
 
     private final CommandDispatcher<MessageContext> commandDispatcher;
 
@@ -75,7 +74,7 @@ public class CommandManager {
                     if (exceptionExecutor != null) {
                         exceptionExecutor.execute(context.getAuthor(), context, e);
                     } else {
-                        LOGGER.error("Command error: " + e.getContext());
+
                     }
                 }
             }

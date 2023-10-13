@@ -12,7 +12,7 @@ public interface Message {
     MessageType getType();
 
     static Message parse(MessageType type, String content) {
-        return parse(type, JsonParser.parseString(content).getAsJsonObject());
+        return parse(type, new JsonParser().parse(content).getAsJsonObject());
     }
 
     static Message parse(MessageType type, JsonObject object) {

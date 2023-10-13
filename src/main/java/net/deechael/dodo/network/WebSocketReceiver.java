@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class WebSocketReceiver extends Receiver {
 
-    private final static Logger LOGGER = LoggerUtils.getLogger(WebSocketReceiver.class, Level.DEBUG);
+    //private final static Logger LOGGER = LoggerUtils.getLogger(WebSocketReceiver.class, Level.DEBUG);
 
     private final PacketListener listener = new PacketListener(this);
 
@@ -48,16 +48,16 @@ public class WebSocketReceiver extends Receiver {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                LOGGER.error("Failed to fetch the websocket url", e);
+                //LOGGER.error("Failed to fetch the websocket url", e);
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                LOGGER.debug("Fetched websocket url successfully");
+                //LOGGER.debug("Fetched websocket url successfully");
                 String resp = Objects.requireNonNull(response.body()).string();
-                JsonObject body = JsonParser.parseString(resp).getAsJsonObject();
+                JsonObject body = new JsonParser().parse(resp).getAsJsonObject();
                 String url = body.getAsJsonObject("data").get("endpoint").getAsString();
-                LOGGER.debug("Websocket url: " + url);
+                //LOGGER.debug("Websocket url: " + url);
                 websocketStart(url);
             }
         });
@@ -69,7 +69,7 @@ public class WebSocketReceiver extends Receiver {
     }
 
     private void websocketStart(String url) {
-        LOGGER.debug("Starting websocket...");
+       // LOGGER.debug("Starting websocket...");
         WebSocket webSocket = getClient().newWebSocket(
                 new Request.Builder()
                         .get()
@@ -89,7 +89,7 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-            LOGGER.debug("Connected successfully");
+            //LOGGER.debug("Connected successfully");
             synchronized ((Object) receiver.started) {
                 receiver.started = true;
             }
@@ -97,7 +97,7 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-            JsonObject object = JsonParser.parseString(text).getAsJsonObject();
+            JsonObject object =  new JsonParser().parse(text).getAsJsonObject();
             if (object.get("type").getAsInt() != 0)
                 return;
             receiver.solver.apply(object);
@@ -110,12 +110,12 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-            LOGGER.debug("WebSocket connection has been closed");
+            //LOGGER.debug("WebSocket connection has been closed");
         }
 
         @Override
         public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable throwable, Response response) {
-            LOGGER.debug("Failed to connect to websocket", throwable);
+            //LOGGER.debug("Failed to connect to websocket", throwable);
         }
 
     }

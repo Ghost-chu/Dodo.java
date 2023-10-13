@@ -20,10 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class Requester {
-
     private final Gson gson = new Gson();
-    private final static Logger LOGGER = LoggerUtils.getLogger(Requester.class, Level.DEBUG);
-
     @Getter
     private final OkHttpClient client;
     @Getter
@@ -60,14 +57,14 @@ public class Requester {
         Call call = getClient().newCall(req);
         try {
             Response response = call.execute();
-            if (!response.isSuccessful())
-                LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
-            JsonObject object = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
-            if (object.get("status").getAsInt() != 0)
-                LOGGER.error("Dodo error when executing " + route.getRoute(), new RuntimeException(object.get("message").getAsString()));
+            if (!response.isSuccessful()){}
+                //LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
+            JsonObject object =  new JsonParser().parse(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
+            if (object.get("status").getAsInt() != 0){}
+                //LOGGER.error("Dodo error when executing " + route.getRoute(), new RuntimeException(object.get("message").getAsString()));
             return object;
-        } catch (IOException e) {
-            LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
+        } catch (IOException e) {{}
+            //LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
         }
         return new JsonObject();
     }
@@ -88,19 +85,19 @@ public class Requester {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 future.cancel(true);
-                LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
+                //LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     future.cancel(true);
-                    LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
+                   // LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
                 }
-                JsonObject object = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
+                JsonObject object =  new JsonParser().parse(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
                 if (object.get("status").getAsInt() != 0) {
                     future.cancel(true);
-                    LOGGER.error("Dodo error when executing " + route.getRoute(), new RuntimeException(object.get("message").getAsString()));
+                   // LOGGER.error("Dodo error when executing " + route.getRoute(), new RuntimeException(object.get("message").getAsString()));
                 }
                 future.done(object);
             }

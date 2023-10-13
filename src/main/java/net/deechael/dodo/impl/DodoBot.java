@@ -13,7 +13,6 @@ import java.util.List;
 
 public class DodoBot implements Bot {
 
-    private final static Logger LOGGER = LoggerUtils.getLogger(DodoBot.class, Level.DEBUG);
 
     private final Client client;
 
@@ -32,7 +31,6 @@ public class DodoBot implements Bot {
                     break;
             }
         }
-        LOGGER.debug("Starting running \"runAfters\"");
         for (Runnable runnable : runAfters) {
             try {
                 runnable.run();
