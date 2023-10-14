@@ -172,6 +172,7 @@ public class EventManager {
         } else if (Objects.equals(eventType, "1001")) {
             if (!handlers.containsKey(PersonalMessageEvent.class))
                 return;
+            String islandId = string(eventJson, "islandSourceId");
             String dodoId = string(eventJson, "dodoSourceId");
             //Personal
             JsonObject personalObject = eventJson.getAsJsonObject("personal");
@@ -183,7 +184,7 @@ public class EventManager {
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
             Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
 
-            PersonalMessageEvent event = new PersonalMessageEvent(id, timestamp, dodoId, nickname, avatarUrl, sex,
+            PersonalMessageEvent event = new PersonalMessageEvent(id, timestamp, islandId, dodoId, nickname, avatarUrl, sex,
                     messageId, type, body);
             fireEvent(PersonalMessageEvent.class, event);
         } else {

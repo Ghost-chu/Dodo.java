@@ -9,7 +9,8 @@ import net.deechael.dodo.types.MessageType;
 import net.deechael.dodo.types.UserSexType;
 
 public class PersonalMessageEvent extends Event {
-
+    @Getter
+    private final String islandId;
     @Getter
     private final String dodoId;
     @Getter
@@ -27,6 +28,7 @@ public class PersonalMessageEvent extends Event {
 
     public PersonalMessageEvent(String id,
                                 long timestamp,
+                                String islandId,
                                 String dodoId,
                                 String nickname,
                                 String avatarUrl,
@@ -35,6 +37,7 @@ public class PersonalMessageEvent extends Event {
                                 MessageType messageType,
                                 Message body) {
         super(id, EventType.PERSONAL_MESSAGE, timestamp);
+        this.islandId = islandId;
         this.dodoId = dodoId;
         this.nickname = nickname;
         this.avatarUrl = avatarUrl;
