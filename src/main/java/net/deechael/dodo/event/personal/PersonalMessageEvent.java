@@ -21,8 +21,6 @@ public class PersonalMessageEvent extends Event {
     @Getter
     private final String messageId;
     @Getter
-    private Member member;
-    @Getter
     private final MessageType messageType;
     @Getter
     private final Message body;
