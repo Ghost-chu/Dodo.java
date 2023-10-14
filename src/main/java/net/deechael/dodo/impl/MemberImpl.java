@@ -1,5 +1,6 @@
 package net.deechael.dodo.impl;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -197,7 +198,7 @@ public class MemberImpl implements Member {
 
     @Override
     public void editIntegral(IntegralOperateType operateType, long integral) {
-        Route route = API.V2.Integral.getIntegralInfo()
+        Route route = API.V2.Integral.setIntegralEdit()
                 .param("islandSourceId", getIslandId())
                 .param("dodoSourceId", getId())
                 .param("operateType", operateType.getCode())
