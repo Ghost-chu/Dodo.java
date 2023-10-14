@@ -162,6 +162,7 @@ public class MemberImpl implements Member {
     @Override
     public void send(Message content) {
         Route route = API.V2.Personal.messageSend()
+                .param("islandSourceId", getIslandId())
                 .param("dodoSourceId", getId())
                 .param("messageType", content.getType().getCode())
                 .param("messageBody", content.get());

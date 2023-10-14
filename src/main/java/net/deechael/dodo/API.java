@@ -546,6 +546,7 @@ public final class API {
         public static class Personal {
 
             @RequiredParameters({
+                    @Parameter(name = "islandSourceId", type = String.class),
                     @Parameter(name = "dodoSourceId", type = String.class),
                     @Parameter(name = "messageType", type = int.class, mustBe = "x in [1, 2, 3]"),
                     @Parameter(name = "messageBody", type = String.class)

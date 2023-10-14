@@ -62,7 +62,7 @@ public class Requester {
                 LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
             JsonObject object = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
             if (object.get("status").getAsInt() != 0)
-                LOGGER.error("Dodo error when executing " + route.getRoute(), new RuntimeException(object.get("message").getAsString()));
+                LOGGER.error("Dodo error when executing " + route.getRoute()+" with params "+gson.toJson(route.getParams()), new RuntimeException(object.get("message").getAsString()));
             return object;
         } catch (IOException e) {
             LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
