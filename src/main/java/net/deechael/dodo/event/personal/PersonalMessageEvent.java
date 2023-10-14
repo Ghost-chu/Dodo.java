@@ -20,6 +20,8 @@ public class PersonalMessageEvent extends Event {
     @Getter
     private final UserSexType sex;
     @Getter
+    private final Member member;
+    @Getter
     private final String messageId;
     @Getter
     private final MessageType messageType;
@@ -33,6 +35,7 @@ public class PersonalMessageEvent extends Event {
                                 String nickname,
                                 String avatarUrl,
                                 UserSexType sex,
+                                Member member,
                                 String messageId,
                                 MessageType messageType,
                                 Message body) {
@@ -42,6 +45,7 @@ public class PersonalMessageEvent extends Event {
         this.nickname = nickname;
         this.avatarUrl = avatarUrl;
         this.sex = sex;
+        this.member = member;
         this.messageId = messageId;
         this.messageType = messageType;
         this.body = body;

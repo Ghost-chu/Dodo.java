@@ -183,8 +183,9 @@ public class EventManager {
             String messageId = string(eventJson, "messageId");
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
             Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
+            Member member = client.fetchMember(islandId, dodoId);
 
-            PersonalMessageEvent event = new PersonalMessageEvent(id, timestamp, islandId, dodoId, nickname, avatarUrl, sex,
+            PersonalMessageEvent event = new PersonalMessageEvent(id, timestamp, islandId, dodoId, nickname, avatarUrl, sex, member,
                     messageId, type, body);
             fireEvent(PersonalMessageEvent.class, event);
         } else {
