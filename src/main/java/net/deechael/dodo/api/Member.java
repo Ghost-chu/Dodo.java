@@ -54,6 +54,9 @@ public interface Member {
     void addRole(String roleId);
 
     void removeRole(String roleId);
+    long getIntegral();
+
+    void editIntegral(IntegralOperateType operateType, long integral);
 
     interface VoiceStatus {
 

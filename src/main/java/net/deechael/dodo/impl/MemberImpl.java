@@ -10,6 +10,7 @@ import net.deechael.dodo.api.Role;
 import net.deechael.dodo.content.Message;
 import net.deechael.dodo.gate.Gateway;
 import net.deechael.dodo.network.Route;
+import net.deechael.dodo.types.IntegralOperateType;
 import net.deechael.dodo.types.UserOnlineDeviceType;
 import net.deechael.dodo.types.UserOnlineStatusType;
 import net.deechael.dodo.types.UserSexType;
@@ -185,4 +186,21 @@ public class MemberImpl implements Member {
         gateway.executeRequest(route);
     }
 
+    @Override
+    public long getIntegral() {
+        Route route = API.V2.Integral.getIntegralInfo()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId());
+        return gateway.executeRequest(route).getAsJsonObject().get("integralBalance").getAsLong();
+    }
+
+    @Override
+    public void editIntegral(IntegralOperateType operateType, long integral) {
+        Route route = API.V2.Integral.getIntegralInfo()
+                .param("islandSourceId", getIslandId())
+                .param("dodoSourceId", getId())
+                .param("operateType", operateType.getCode())
+                .param("integral", integral);
+        gateway.executeRequest(route);
+    }
 }
