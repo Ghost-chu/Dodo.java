@@ -559,6 +559,29 @@ public final class API {
 
         }
 
+        public static class Integral {
+            @RequiredParameters({
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class)
+            })
+            @Responses({
+                    @Response(name = "integralBalance", type = Long.class)
+            })
+            public static Route getIntegralInfo() {
+                return new Route(POST, "integral/info");
+            }
+
+            @RequiredParameters({
+                    @Parameter(name = "islandSourceId", type = String.class),
+                    @Parameter(name = "dodoSourceId", type = String.class),
+                    @Parameter(name = "operateType", type = Integer.class),
+                    @Parameter(name = "integral", type = Long.class)
+            })
+            public static Route setIntegralEdit() {
+                return new Route(POST, "integral/edit");
+            }
+        }
+
         public static class Resource {
 
             @RequiredParameters({

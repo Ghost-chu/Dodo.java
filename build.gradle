@@ -4,7 +4,7 @@ plugins {
 }
 
 group'net.deechael'
-version'1.00.4'
+version'1.00.5'
 
 repositories {
     mavenCentral()
@@ -35,7 +35,7 @@ dependencies {
     implementation 'commons-lang:commons-lang:2.6' // Utils
     implementation 'com.google.guava:guava:31.1-jre' // Utils
     implementation 'net.deechael:Useless:1.02.0' // Utils
-    implementation 'com.mojang:brigadier:1.0.18'
+    implementation 'com.mojang:brigadier:1.0.18' transitive(true)
 
     //Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
