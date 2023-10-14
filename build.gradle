@@ -4,7 +4,7 @@ plugins {
 }
 
 group'net.deechael'
-version'1.00.5'
+version'1.00.6'
 
 repositories {
     mavenCentral()
