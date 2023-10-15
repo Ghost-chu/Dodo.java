@@ -64,7 +64,7 @@ public class EventManager {
     public void unregisterListener(Listener listener) {
         Class<?> listenerClass = listener.getClass();
         for (Class<?> keyClass : handlers.keySet()) {
-            List<Entry<Method, Object>> found = handlers.get(keyClass).stream().filter(entry -> entry.getKey().getDeclaringClass() == listenerClass).toList();
+            List<Entry<Method, Object>> found = handlers.get(keyClass).stream().filter(entry -> entry.getKey().getDeclaringClass() == listenerClass).collect(Collectors.toList());
             handlers.get(keyClass).removeAll(found);
         }
     }

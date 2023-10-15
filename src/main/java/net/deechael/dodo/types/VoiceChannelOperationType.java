@@ -18,12 +18,16 @@ public enum VoiceChannelOperationType {
     }
 
     public static VoiceChannelOperationType of(int code) {
-        return switch (code) {
-            case 1 -> ON;
-            case 2 -> MUTE;
-            case 3 -> KICK;
-            default -> OFF;
-        };
+        switch (code) {
+            case 1:
+                return ON;
+            case 2:
+                return MUTE;
+            case 3:
+                return KICK;
+            default:
+                return OFF;
+        }
     }
 
 }

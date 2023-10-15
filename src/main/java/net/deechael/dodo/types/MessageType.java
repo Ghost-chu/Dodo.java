@@ -23,13 +23,18 @@ public enum MessageType {
     }
 
     public static MessageType of(int code) {
-        return switch (code) {
-            case 1 -> TEXT;
-            case 2 -> IMAGE;
-            case 3 -> VIDEO;
-            case 6 -> CARD;
-            default -> UNKNOWN;
-        };
+        switch (code) {
+            case 1:
+                return TEXT;
+            case 2:
+                return IMAGE;
+            case 3:
+                return VIDEO;
+            case 6:
+                return CARD;
+            default:
+                return UNKNOWN;
+        }
     }
 
 }

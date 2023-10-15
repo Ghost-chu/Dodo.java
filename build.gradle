@@ -1,28 +1,47 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id'java'
     id'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
 }
 
+tasks.compileJava {
+    sourceCompatibility = "${JavaVersion.VERSION_1_8}"
+}
+
+
 group'net.deechael'
-version'1.00.6'
+version'1.00.7'
 
 repositories {
     mavenCentral()
     maven { name "Minecraft" ; url "https://libraries.minecraft.net/" }
 }
+shadowJar {
+    archiveBaseName.set(project.name+"-"+project.version)
+    archiveClassifier.set('shadowJar')
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.name
-            from components.java
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
         }
     }
 
     repositories {
         mavenLocal()
     }
+}
+
+tasks.named('shadowJar', ShadowJar) {
+    enableRelocation true
+    relocationPrefix "dodojava"
 }
 
 dependencies {
@@ -35,7 +54,7 @@ dependencies {
     implementation 'commons-lang:commons-lang:2.6' // Utils
     implementation 'com.google.guava:guava:31.1-jre' // Utils
     implementation 'net.deechael:Useless:1.02.0' // Utils
-    implementation 'com.mojang:brigadier:1.0.18' transitive(true)
+    implementation 'com.mojang:brigadier:1.0.18'
 
     //Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'

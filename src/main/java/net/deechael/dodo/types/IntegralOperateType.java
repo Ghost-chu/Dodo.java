@@ -16,11 +16,14 @@ public enum IntegralOperateType {
     }
 
     public static IntegralOperateType of(int code) {
-        return switch (code) {
-            case 1 -> DEPOSIT;
-            case 2 -> WITHDRAW;
-            default -> WITHDRAW;
-        };
+        switch (code) {
+            case 1:
+                return DEPOSIT;
+            case 2:
+                return WITHDRAW;
+            default:
+                return WITHDRAW;
+        }
     }
 
 }
