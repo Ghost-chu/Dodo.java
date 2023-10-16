@@ -6,7 +6,6 @@
 * 修复了 Windows 平台下文本乱码问题（指定 UTF-8 编码）
 * 使用 slf4j api 替换 logback 日志引擎，允许接入任何自己的日志引擎
 * 移除 Brigadier 包，转为使用 Maven 依赖
-* 升级至 Java 17
 * 实现了群组成员的积分 API
 * 修复了私信 API 无法使用的问题
 * 增强了私信事件的 API
