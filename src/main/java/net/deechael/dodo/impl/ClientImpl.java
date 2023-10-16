@@ -10,6 +10,8 @@ import net.deechael.dodo.content.TextMessage;
 import net.deechael.dodo.event.EventManager;
 import net.deechael.dodo.event.Listener;
 import net.deechael.dodo.gate.Gateway;
+import net.deechael.dodo.history.HistoryManager;
+import net.deechael.dodo.history.HistoryMessage;
 import net.deechael.dodo.network.Requester;
 import net.deechael.dodo.network.Route;
 import net.deechael.dodo.network.WebSocketReceiver;
@@ -17,7 +19,9 @@ import net.deechael.dodo.types.MessageType;
 import okhttp3.OkHttpClient;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class ClientImpl implements Client {
@@ -26,10 +30,12 @@ public class ClientImpl implements Client {
 
     private final EventManager eventManager;
     private final CommandManager commandManager;
+    private final HistoryManager historyManager;
 
     private boolean started = false;
 
     public ClientImpl(int clientId, String token) {
+        this.historyManager = new HistoryManagerImpl();
         OkHttpClient client = new OkHttpClient.Builder().pingInterval(30, TimeUnit.SECONDS).build();
         this.gateway = new Gateway(new Requester(client, clientId, token),
                 new WebSocketReceiver(client, clientId, token, this::pkgReceive));
@@ -115,6 +121,16 @@ public class ClientImpl implements Client {
         return this.gateway.executeRequest(route).getAsJsonObject().get("messageId").getAsString();
     }
 
+    @Override
+    public List<HistoryMessage> getChannelMessages(Channel channel) {
+        return this.historyManager.getChannelMessages(channel);
+    }
+
+    @Override
+    public Optional<HistoryMessage> fetchMessage(String messageId) {
+        return this.historyManager.fetchMessage(messageId);
+    }
+
     private void pkgReceive(JsonObject pkg) {
         JsonObject data = pkg.getAsJsonObject("data");
         if (Objects.equals(data.get("eventType").getAsString(), "2001")) {
@@ -147,5 +163,4 @@ public class ClientImpl implements Client {
     private String string(JsonObject object, String key) {
         return object.get(key).getAsString();
     }
-
 }

@@ -3,8 +3,11 @@ package net.deechael.dodo.api;
 import net.deechael.dodo.command.DodoCommand;
 import net.deechael.dodo.content.Message;
 import net.deechael.dodo.event.Listener;
+import net.deechael.dodo.history.HistoryMessage;
 
 import java.io.File;
+import java.util.List;
+import java.util.Optional;
 
 public interface Client {
 
@@ -27,5 +30,8 @@ public interface Client {
     String uploadImage(File imageFile);
 
     String updateMessage(String messageId, Message content);
+
+    List<HistoryMessage> getChannelMessages(Channel channel);
+    Optional<HistoryMessage> fetchMessage(String messageId);
 
 }
