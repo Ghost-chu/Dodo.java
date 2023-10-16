@@ -41,7 +41,7 @@ publishing {
 
 tasks.named('shadowJar', ShadowJar) {
     enableRelocation true
-    relocationPrefix "dodojava"
+    relocationPrefix "net.deechael.dodo.shade"
 }
 
 dependencies {

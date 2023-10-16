@@ -83,6 +83,8 @@ public class ClientImpl implements Client {
             return new TextChannelImpl(gateway, info);
         } else if (info.get("channelType").getAsInt() == 2) {
             return new VoiceChannelImpl(gateway, info);
+        } else if (info.get("channelType").getAsInt() == 4) {
+            return new ArticleChannelImpl(gateway, info);
         } else {
             return new ChannelImpl(gateway, info);
         }

@@ -312,7 +312,31 @@ public final class API {
 
 
             // TODO article related routes
-
+            @RequiredParameters(
+                    {
+                            @Parameter(name = "channelId", type = String.class),
+                            @Parameter(name = "title", type = String.class)
+                    }
+            )
+            @OptionalParameters({
+                    @Parameter(name = "content", type = String.class),
+                    @Parameter(name = "imageUrl", type = String.class)
+            })
+            @Responses({
+                    @Response(name = "articleId", type = String.class)
+            })
+            public static Route createArticle(){
+                return new Route(POST, "channel/article/add");
+            }
+            @RequiredParameters({
+                            @Parameter(name = "channelId", type = String.class),
+                            @Parameter(name = "type", type = int.class),
+                            @Parameter(name = "id", type = String.class)
+            })
+            @NonResponses
+            public static Route deleteArticleObject(){
+                return new Route(POST, "channel/article/remove");
+            }
         }
 
         public static class Role {
@@ -598,7 +622,6 @@ public final class API {
             }
 
         }
-
         public static class Websocket {
 
             @NonParameters
