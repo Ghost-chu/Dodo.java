@@ -131,6 +131,11 @@ public class ClientImpl implements Client {
         return this.historyManager.fetchMessage(messageId);
     }
 
+    @Override
+    public void recordChannelMessage(String channelId, long timestamp, String messageId, Message message) {
+        this.historyManager.recordChannelMessage(channelId,timestamp, messageId, message);
+    }
+
     private void pkgReceive(JsonObject pkg) {
         JsonObject data = pkg.getAsJsonObject("data");
         if (Objects.equals(data.get("eventType").getAsString(), "2001")) {

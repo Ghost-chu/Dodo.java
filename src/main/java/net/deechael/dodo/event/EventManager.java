@@ -93,8 +93,11 @@ public class EventManager {
             }
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
             Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
+            Channel channel = client.fetchChannel(islandId, channelId);
+            Island island = client.fetchIsland(islandId);
             MessageContext context = new MessageContextImpl(timestamp, messageId, body,
-                    member, client.fetchChannel(islandId, channelId), client.fetchIsland(islandId));
+                    member,channel,island);
+            client.recordChannelMessage(channelId, timestamp, messageId, body);
             ChannelMessageEvent event = new ChannelMessageEvent(id, timestamp, context, islandId,
                     channelId, dodoId, messageId, member, reference, type, body);
             fireEvent(ChannelMessageEvent.class, event);

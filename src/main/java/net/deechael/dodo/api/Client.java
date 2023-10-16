@@ -33,5 +33,6 @@ public interface Client {
 
     List<HistoryMessage> getChannelMessages(Channel channel);
     Optional<HistoryMessage> fetchMessage(String messageId);
+    void recordChannelMessage(String channelId, long timestamp, String messageId, Message message);
 
 }
