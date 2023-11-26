@@ -55,9 +55,14 @@ public class WebSocketReceiver extends Receiver {
                 LOGGER.debug("Fetched websocket url successfully");
                 String resp = Objects.requireNonNull(response.body()).string();
                 JsonObject body = JsonParser.parseString(resp).getAsJsonObject();
-                String url = body.getAsJsonObject("data").get("endpoint").getAsString();
-                LOGGER.debug("Websocket url: " + url);
-                websocketStart(url);
+                try {
+                    String url = body.getAsJsonObject("data").get("endpoint").getAsString();
+                    LOGGER.debug("Websocket url: " + url);
+                    websocketStart(url);
+                }catch (NullPointerException e){
+                    LOGGER.warn("Failed to retrieve the websocket url: {}",resp);
+                }
+
             }
         });
     }

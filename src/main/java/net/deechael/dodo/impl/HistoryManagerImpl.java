@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class HistoryManagerImpl implements HistoryManager {
     private final Cache<String, HistoryMessage> messageCache = CacheBuilder.newBuilder()
-            .maximumSize(Integer.parseUnsignedInt(System.getProperty("dodo.java.max-cache-length")))
+            .maximumSize(Integer.parseUnsignedInt(System.getProperty("dodo.java.max-cache-length","3000")))
             .build();
 
     @Override
