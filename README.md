@@ -12,6 +12,10 @@
 * 新增了帖子 API
 * 在内存中缓存聊天消息，允许用户通过 `message_id` 获取本次Bot会话中的历史消息
 
+## 不知道从哪里开始？
+
+查看示例插件 [DodoSRV](https://github.com/Ghost-chu/DoDoSRV)
+
 ---
 
 # Dodo.java
