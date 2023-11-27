@@ -31,14 +31,22 @@ public class ClientImpl implements Client {
     private final EventManager eventManager;
     private final CommandManager commandManager;
     private final HistoryManager historyManager;
+    private final WebSocketReceiver websocketReceiver;
 
     private boolean started = false;
 
     public ClientImpl(int clientId, String token) {
         this.historyManager = new HistoryManagerImpl();
-        OkHttpClient client = new OkHttpClient.Builder().pingInterval(30, TimeUnit.SECONDS).build();
-        this.gateway = new Gateway(new Requester(client, clientId, token),
-                new WebSocketReceiver(client, clientId, token, this::pkgReceive));
+        OkHttpClient client = new OkHttpClient
+                .Builder()
+                .pingInterval(25, TimeUnit.SECONDS)
+                .readTimeout(15,TimeUnit.SECONDS)
+                .connectTimeout(15,TimeUnit.SECONDS)
+                .writeTimeout(15,TimeUnit.SECONDS)
+                .callTimeout(5,TimeUnit.SECONDS)
+                .build();
+        this.websocketReceiver =  new WebSocketReceiver(client, clientId, token, this::pkgReceive);
+        this.gateway = new Gateway(new Requester(client, clientId, token),websocketReceiver);
         this.eventManager = new EventManager(this);
         this.commandManager = new CommandManager();
     }
@@ -57,6 +65,16 @@ public class ClientImpl implements Client {
     }
 
     @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public Gateway getGateway() {
+        return this.gateway;
+    }
+
+    @Override
     public void addEventListener(Listener listener) {
         this.eventManager.addListener(listener);
     }
@@ -64,6 +82,11 @@ public class ClientImpl implements Client {
     @Override
     public void unregisterEventListener(Listener listener) {
         this.eventManager.unregisterListener(listener);
+    }
+
+    @Override
+    public void unregisterAllEventListeners(){
+        this.eventManager.unregisterAllListeners();
     }
 
     @Override

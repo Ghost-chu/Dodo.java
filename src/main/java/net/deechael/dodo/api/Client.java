@@ -3,6 +3,7 @@ package net.deechael.dodo.api;
 import net.deechael.dodo.command.DodoCommand;
 import net.deechael.dodo.content.Message;
 import net.deechael.dodo.event.Listener;
+import net.deechael.dodo.gate.Gateway;
 import net.deechael.dodo.history.HistoryMessage;
 
 import java.io.File;
@@ -15,9 +16,14 @@ public interface Client {
 
     boolean isStart();
 
+    void stop();
+    Gateway getGateway();
+
     void addEventListener(Listener listener);
 
     void unregisterEventListener(Listener listener);
+
+    void unregisterAllEventListeners();
 
     void registerCommand(DodoCommand command);
 

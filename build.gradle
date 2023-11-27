@@ -16,7 +16,7 @@ tasks.compileJava {
 
 
 group'net.deechael'
-version'1.00.8'
+version'1.00.10'
 
 repositories {
     mavenCentral()

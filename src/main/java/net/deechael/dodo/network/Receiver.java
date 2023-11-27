@@ -1,10 +1,13 @@
 package net.deechael.dodo.network;
 
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 
 public abstract class Receiver {
 
+    @Getter
     private final OkHttpClient client;
+    @Getter
     private final int clientId;
     private final String token;
 
@@ -14,14 +17,6 @@ public abstract class Receiver {
         this.token = token;
     }
 
-    public OkHttpClient getClient() {
-        return client;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
     protected String getToken() {
         return this.token;
     }
@@ -29,5 +24,7 @@ public abstract class Receiver {
     public abstract void start();
 
     public abstract boolean isStart();
+
+    public abstract void stop();
 
 }

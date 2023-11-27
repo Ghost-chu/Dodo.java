@@ -69,6 +69,10 @@ public class EventManager {
         }
     }
 
+    public void unregisterAllListeners(){
+        this.handlers.clear();
+    }
+
     public void callEvent(JsonObject eventJson) {
         String id = string(eventJson, "eventId");
         String eventType = string(eventJson, "eventType");

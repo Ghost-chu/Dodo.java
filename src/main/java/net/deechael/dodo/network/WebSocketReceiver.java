@@ -2,6 +2,7 @@ package net.deechael.dodo.network;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.Getter;
 import lombok.NonNull;
 import net.deechael.dodo.API;
 import net.deechael.useless.function.parameters.Parameter;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class WebSocketReceiver extends Receiver {
 
@@ -26,6 +28,9 @@ public class WebSocketReceiver extends Receiver {
     private boolean started = false;
     private boolean triedToStart = false;
 
+    @Getter
+    private WebSocket webSocket;
+
     public WebSocketReceiver(OkHttpClient client, int clientId, String token, Parameter<JsonObject> solver) {
         super(client, clientId, token);
         this.solver = solver;
@@ -33,8 +38,11 @@ public class WebSocketReceiver extends Receiver {
 
     @Override
     public void start() {
-        if (triedToStart)
+        if (triedToStart) {
+            LOGGER.warn("Another start process is running.");
             return;
+        }
+        LOGGER.info("Connecting...");
         triedToStart = true;
         String auth = "Bot " + getClientId() + "." + getToken();
         Request req = new Request.Builder()
@@ -47,17 +55,26 @@ public class WebSocketReceiver extends Receiver {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                try {
+                    Thread.sleep(10000);
+                    CompletableFuture.supplyAsync(()->{
+                        start();
+                        return null;
+                    });
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
                 LOGGER.error("Failed to fetch the websocket url", e);
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                LOGGER.debug("Fetched websocket url successfully");
+                LOGGER.info("Fetched websocket url successfully");
                 String resp = Objects.requireNonNull(response.body()).string();
                 JsonObject body = JsonParser.parseString(resp).getAsJsonObject();
                 try {
                     String url = body.getAsJsonObject("data").get("endpoint").getAsString();
-                    LOGGER.debug("Websocket url: " + url);
+                    LOGGER.info("Websocket url: " + url);
                     websocketStart(url);
                 }catch (NullPointerException e){
                     LOGGER.warn("Failed to retrieve the websocket url: {}",resp);
@@ -72,9 +89,14 @@ public class WebSocketReceiver extends Receiver {
         return started;
     }
 
+    @Override
+    public void stop() {
+        this.webSocket.close(1000,null);
+    }
+
     private void websocketStart(String url) {
-        LOGGER.debug("Starting websocket...");
-        WebSocket webSocket = getClient().newWebSocket(
+        LOGGER.info("Starting websocket...");
+        this.webSocket = getClient().newWebSocket(
                 new Request.Builder()
                         .get()
                         .header("Content-type", "application/json;charset=utf-8")
@@ -94,9 +116,8 @@ public class WebSocketReceiver extends Receiver {
         @Override
         public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
             LOGGER.debug("Connected successfully");
-            synchronized ((Object) receiver.started) {
-                receiver.started = true;
-            }
+            receiver.triedToStart = false;
+            receiver.started = true;
         }
 
         @Override
@@ -114,12 +135,24 @@ public class WebSocketReceiver extends Receiver {
 
         @Override
         public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-            LOGGER.debug("WebSocket connection has been closed");
+            LOGGER.warn("WebSocket connection has been closed");
+            receiver.triedToStart = false;
+            receiver.started = false;
         }
 
         @Override
         public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable throwable, Response response) {
-            LOGGER.debug("Failed to connect to websocket", throwable);
+            webSocket.close(1000, null);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            LOGGER.warn("Failed on websocket, reconnecting...", throwable);
+            receiver.triedToStart = false;
+            receiver.started = false;
+            receiver.start();
+
         }
 
     }
