@@ -20,6 +20,7 @@ import java.lang.reflect.Modifier;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class EventManager {
@@ -204,11 +205,13 @@ public class EventManager {
         if (!handlers.containsKey(eventClass))
             return;
         for (Entry<Method, Object> entry : handlers.get(eventClass)) {
-            try {
-                entry.getKey().invoke(entry.getValue(), event);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            CompletableFuture.runAsync(()->{
+                try {
+                    entry.getKey().invoke(entry.getValue(), event);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
