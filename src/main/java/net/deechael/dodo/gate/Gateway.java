@@ -2,21 +2,21 @@ package net.deechael.dodo.gate;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.deechael.dodo.network.Receiver;
 import net.deechael.dodo.network.Requester;
 import net.deechael.dodo.network.Route;
+import net.deechael.dodo.network.WebSocketReceiver;
 
 public class Gateway {
 
     private final Requester requester;
-    private final Receiver receiver;
+    private final WebSocketReceiver receiver;
 
-    public Gateway(Requester requester, Receiver receiver) {
+    public Gateway(Requester requester, WebSocketReceiver receiver) {
         this.requester = requester;
         this.receiver = receiver;
     }
 
-    public Receiver getReceiver() {
+    public WebSocketReceiver getReceiver() {
         return receiver;
     }
 

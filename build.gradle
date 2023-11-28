@@ -16,7 +16,7 @@ tasks.compileJava {
 
 
 group'net.deechael'
-version'1.00.11'
+version'1.01.00'
 
 repositories {
     mavenCentral()
@@ -47,7 +47,6 @@ tasks.named('shadowJar', ShadowJar) {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0' // WebSocket
     implementation 'com.google.code.gson:gson:2.9.0' // Json
     implementation 'org.slf4j:slf4j-api:2.0.9' // Logging
     implementation 'org.yaml:snakeyaml:1.30' // Configuration
@@ -55,6 +54,16 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre' // Utils
     implementation 'net.deechael:Useless:1.02.0' // Utils
     implementation 'com.mojang:brigadier:1.0.18'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.4' // Websocket
+    implementation 'com.konghq:unirest-java:3.14.1'
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    implementation 'org.jetbrains:annotations:24.1.0'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
+    implementation 'org.slf4j:slf4j-jdk14:2.0.9'
+
+
+
 
     //Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'

@@ -16,13 +16,11 @@ import net.deechael.dodo.network.Requester;
 import net.deechael.dodo.network.Route;
 import net.deechael.dodo.network.WebSocketReceiver;
 import net.deechael.dodo.types.MessageType;
-import okhttp3.OkHttpClient;
 
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class ClientImpl implements Client {
 
@@ -37,16 +35,8 @@ public class ClientImpl implements Client {
 
     public ClientImpl(int clientId, String token) {
         this.historyManager = new HistoryManagerImpl();
-        OkHttpClient client = new OkHttpClient
-                .Builder()
-                .pingInterval(25, TimeUnit.SECONDS)
-                .readTimeout(15,TimeUnit.SECONDS)
-                .connectTimeout(15,TimeUnit.SECONDS)
-                .writeTimeout(15,TimeUnit.SECONDS)
-                .callTimeout(5,TimeUnit.SECONDS)
-                .build();
-        this.websocketReceiver =  new WebSocketReceiver(client, clientId, token, this::pkgReceive);
-        this.gateway = new Gateway(new Requester(client, clientId, token),websocketReceiver);
+        this.websocketReceiver =  new WebSocketReceiver(clientId, token, this::pkgReceive);
+        this.gateway = new Gateway(new Requester( clientId, token),websocketReceiver);
         this.eventManager = new EventManager(this);
         this.commandManager = new CommandManager();
     }

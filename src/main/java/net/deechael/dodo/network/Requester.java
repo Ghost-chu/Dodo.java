@@ -3,107 +3,67 @@ package net.deechael.dodo.network;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import kong.unirest.HttpRequest;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import lombok.Getter;
 import net.deechael.dodo.API;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class Requester {
 
+    private final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Requester.class);
     private final Gson gson = new Gson();
-    private final static Logger LOGGER = LoggerFactory.getLogger(Requester.class);
-
-    @Getter
-    private final OkHttpClient client;
     @Getter
     private final int clientId;
     @Getter
     private final String token;
 
-    public Requester(OkHttpClient client, int clientId, String token) {
-        this.client = client;
+    public Requester(int clientId, String token) {
         this.clientId = clientId;
         this.token = token;
     }
 
     public JsonObject executeRequest(Route route) {
-        Request.Builder builder = new Request.Builder()
-                .header("Authorization", "Bot " + getClientId() + "." + getToken())
-                .header("Content-type", route.getContentType());
+        Map<String, String> headers = new LinkedHashMap<>();
+        headers.put("Authorization", "Bot " + getClientId() + "." + getToken());
+        headers.put("Content-type", route.getContentType());
         Map<String, String> routeHeaders = route.getHeaders();
         for (String key : routeHeaders.keySet()) {
-            builder.header(key, routeHeaders.get(key));
+            headers.put(key, routeHeaders.get(key));
         }
+        HttpRequest request;
         if (Objects.equals(route.getContentType(), "multipart/form-data")) {
-            builder.post(new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("file", route.getFile().getName(),
-                            RequestBody.create(route.getFile(),
-                                    MediaType.parse("multipart/form-data")))
-                    .build());
+            request = Unirest.post(API.BASE_URL + route.getRoute())
+                    .headers(headers)
+                    .connectTimeout(15*1000)
+                    .socketTimeout(15*1000)
+                    .field("file", route.getFile(), "multipart/form-data");
         } else {
-            builder.post(RequestBody
-                    .create(gson.toJson(route.getParams()),
-                            MediaType.get("application/json")));
+            request = Unirest.post(API.BASE_URL + route.getRoute())
+                    .headers(headers)
+                    .connectTimeout(15*1000)
+                    .socketTimeout(15*1000)
+                    .contentType("application/json")
+                    .body(gson.toJson(route.getParams()));
         }
-        Request req = builder.url(API.BASE_URL + route.getRoute()).build();
-        Call call = getClient().newCall(req);
-        try (Response response = call.execute()){
-            if (!response.isSuccessful())
-                LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
-            JsonObject object = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
-            if (object.get("status").getAsInt() != 0)
-                LOGGER.error("Dodo error when executing " + route.getRoute()+" with params "+gson.toJson(route.getParams()), new RuntimeException(object.get("message").getAsString()));
+        HttpResponse<String> req = request.asString();
+        if (req.isSuccess()) {
+            JsonObject object = JsonParser.parseString(Objects.requireNonNull(req.getBody())).getAsJsonObject();
+            if (object.get("status").getAsInt() != 0) {
+                LOGGER.warn("Dodo error when executing " + route.getRoute() + " with params " + gson.toJson(route.getParams())
+                        , new RuntimeException(object.get("message").getAsString()));
+            }
             return object;
-        } catch (IOException e) {
-            LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
         }
+        LOGGER.warn("DoDo request failed");
         return new JsonObject();
-    }
-
-    public Future<JsonObject> executeRequestAsync(Route route) {
-        // FIXME
-        Request.Builder builder = new Request.Builder()
-                .post(RequestBody.create(new byte[0], MediaType.get("application/json")))
-                .header("Authorization", "Bot " + getClientId() + "." + getToken())
-                .header("Content-type", route.getContentType());
-        Map<String, String> routeHeaders = route.getHeaders();
-        for (String key : routeHeaders.keySet()) {
-            builder.header(key, routeHeaders.get(key));
-        }
-        RequestedFuture future = new RequestedFuture();
-        Call call = getClient().newCall(builder.url(API.BASE_URL + route.getRoute()).build());
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.cancel(true);
-                LOGGER.error("Error was thrown when executing: " + route.getRoute(), e);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    future.cancel(true);
-                    LOGGER.error("Failed to execute: " + route.getRoute(), new RuntimeException("Code: " + response.code()));
-                }
-                JsonObject object = JsonParser.parseString(Objects.requireNonNull(response.body()).string()).getAsJsonObject();
-                if (object.get("status").getAsInt() != 0) {
-                    future.cancel(true);
-                    LOGGER.error("Dodo error when executing " + route.getRoute(), new RuntimeException(object.get("message").getAsString()));
-                }
-                future.done(object);
-            }
-        });
-        return future;
     }
 
     private static class RequestedFuture implements Future<JsonObject> {
@@ -144,7 +104,7 @@ public class Requester {
         }
 
         @Override
-        public JsonObject get(long l, @NotNull TimeUnit timeUnit) {
+        public JsonObject get(long l, TimeUnit timeUnit) {
             long startTime = System.currentTimeMillis();
             long milli = timeUnit.convert(l, TimeUnit.MILLISECONDS);
             while (true) {
