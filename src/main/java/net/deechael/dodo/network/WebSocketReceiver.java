@@ -72,7 +72,7 @@ public class WebSocketReceiver {
                             webSocket.sendPing();
                         }
                     }
-                },0,25*1000L);
+                }, 0, 25 * 1000L);
             } catch (NullPointerException | URISyntaxException e) {
                 LOGGER.warn("Failed to retrieve the websocket url:" + resp);
             }
@@ -125,7 +125,11 @@ public class WebSocketReceiver {
             LOGGER.info(object.toString());
             if (object.get("type").getAsInt() != 0)
                 return;
-            receiver.solver.apply(object);
+            try {
+                receiver.solver.apply(object);
+            } catch (Throwable throwable) {
+                LOGGER.warn("Failed to handle message {}", message, throwable);
+            }
         }
 
         @Override
