@@ -8,7 +8,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import lombok.Getter;
 import net.deechael.dodo.API;
-import org.slf4j.LoggerFactory;
+import net.deechael.dodo.utils.LoggerUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Requester {
 
-    private final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Requester.class);
+    private final static org.slf4j.Logger LOGGER = LoggerUtils.getLogger(Requester.class);
     private final Gson gson = new Gson();
     @Getter
     private final int clientId;

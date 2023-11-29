@@ -7,11 +7,11 @@ import kong.unirest.Unirest;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.deechael.dodo.API;
+import net.deechael.dodo.utils.LoggerUtils;
 import net.deechael.useless.function.parameters.Parameter;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class WebSocketReceiver {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(WebSocketReceiver.class);
+    private final static Logger LOGGER = LoggerUtils.getLogger(WebSocketReceiver.class);
 
     private final Parameter<JsonObject> solver;
     private final int clientId;
@@ -122,6 +122,7 @@ public class WebSocketReceiver {
         @Override
         public void onMessage(String message) {
             JsonObject object = JsonParser.parseString(message).getAsJsonObject();
+            LOGGER.info(object.toString());
             if (object.get("type").getAsInt() != 0)
                 return;
             receiver.solver.apply(object);
@@ -149,6 +150,7 @@ public class WebSocketReceiver {
             close();
             try {
                 Thread.sleep(3000);
+                receiver.start();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

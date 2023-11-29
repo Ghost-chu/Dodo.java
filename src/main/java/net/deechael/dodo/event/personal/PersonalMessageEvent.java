@@ -7,6 +7,7 @@ import net.deechael.dodo.event.Event;
 import net.deechael.dodo.types.EventType;
 import net.deechael.dodo.types.MessageType;
 import net.deechael.dodo.types.UserSexType;
+import org.jetbrains.annotations.Nullable;
 
 public class PersonalMessageEvent extends Event {
     @Getter
@@ -20,6 +21,7 @@ public class PersonalMessageEvent extends Event {
     @Getter
     private final UserSexType sex;
     @Getter
+    @Nullable
     private final Member member;
     @Getter
     private final String messageId;
@@ -35,6 +37,7 @@ public class PersonalMessageEvent extends Event {
                                 String nickname,
                                 String avatarUrl,
                                 UserSexType sex,
+                                @Nullable
                                 Member member,
                                 String messageId,
                                 MessageType messageType,

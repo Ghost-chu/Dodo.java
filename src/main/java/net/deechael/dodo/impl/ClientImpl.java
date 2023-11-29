@@ -16,6 +16,7 @@ import net.deechael.dodo.network.Requester;
 import net.deechael.dodo.network.Route;
 import net.deechael.dodo.network.WebSocketReceiver;
 import net.deechael.dodo.types.MessageType;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -164,9 +165,15 @@ public class ClientImpl implements Client {
 
                     MessageType type = MessageType.of(eventJson.get("messageType").getAsInt());
                     Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
+                    MessageContext context;
+                    if(StringUtils.isEmpty(islandId)){
+                        context = new MessageContextImpl(timestamp, messageId, body,
+                                member, this.fetchChannel(islandId, channelId), null);
+                    }else{
+                        context = new MessageContextImpl(timestamp, messageId, body,
+                                member, this.fetchChannel(islandId, channelId), this.fetchIsland(islandId));
+                    }
 
-                    MessageContext context = new MessageContextImpl(timestamp, messageId, body,
-                            member, this.fetchChannel(islandId, channelId), this.fetchIsland(islandId));
                     if (body != null) {
                         commandManager.execute(context, ((TextMessage) body).getContent());
                     }

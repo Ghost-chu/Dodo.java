@@ -3,6 +3,7 @@ package net.deechael.dodo.impl;
 import lombok.Getter;
 import net.deechael.dodo.api.*;
 import net.deechael.dodo.content.Message;
+import org.jetbrains.annotations.Nullable;
 
 public class MessageContextImpl implements MessageContext {
 
@@ -17,6 +18,7 @@ public class MessageContextImpl implements MessageContext {
     @Getter
     private final Channel channel;
     @Getter
+    @Nullable
     private final Island island;
 
 
@@ -25,7 +27,7 @@ public class MessageContextImpl implements MessageContext {
                               Message content,
                               Member author,
                               Channel channel,
-                              Island island
+                              @Nullable Island island
     ) {
         this.timestamp = timestamp;
         this.messageId = messageId;

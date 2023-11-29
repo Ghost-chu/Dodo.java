@@ -13,6 +13,7 @@ import net.deechael.dodo.event.personal.PersonalMessageEvent;
 import net.deechael.dodo.impl.MessageContextImpl;
 import net.deechael.dodo.types.MessageType;
 import net.deechael.dodo.types.UserSexType;
+import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,15 +26,13 @@ import java.util.stream.Collectors;
 
 public class EventManager {
 
-    private final Client client;
-
-    private final Map<Class<?>, List<Entry<Method, Object>>> handlers = new HashMap<>();
-
     private final static List<Class<?>> EVENT_CLASSES = Arrays.asList(
             ChannelMessageEvent.class, MessageReactionEvent.class, CardMessageButtonClickEvent.class,
             CardMessageFormSubmitEvent.class, CardMessageListSubmitEvent.class, MemberJoinEvent.class,
             MemberLeaveEvent.class, PersonalMessageEvent.class
     );
+    private final Client client;
+    private final Map<Class<?>, List<Entry<Method, Object>>> handlers = new HashMap<>();
 
     public EventManager(Client client) {
         this.client = client;
@@ -70,7 +69,7 @@ public class EventManager {
         }
     }
 
-    public void unregisterAllListeners(){
+    public void unregisterAllListeners() {
         this.handlers.clear();
     }
 
@@ -91,7 +90,7 @@ public class EventManager {
             // Reference
             JsonObject refObject = eventJson.getAsJsonObject("reference");
             Reference reference = null;
-            if(refObject != null && !refObject.isJsonNull()) {
+            if (refObject != null && !refObject.isJsonNull()) {
                 reference = new Reference(string(refObject, "messageId"),
                         string(refObject, "dodoSourceId"),
                         string(refObject, "nickName"));
@@ -99,9 +98,9 @@ public class EventManager {
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
             Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
             Channel channel = client.fetchChannel(islandId, channelId);
-            Island island = client.fetchIsland(islandId);
+            Island island = null;
             MessageContext context = new MessageContextImpl(timestamp, messageId, body,
-                    member,channel,island);
+                    member, channel, island);
             client.recordChannelMessage(channelId, timestamp, messageId, body);
             ChannelMessageEvent event = new ChannelMessageEvent(id, timestamp, context, islandId,
                     channelId, dodoId, messageId, member, reference, type, body);
@@ -191,7 +190,12 @@ public class EventManager {
             String messageId = string(eventJson, "messageId");
             MessageType type = MessageType.of(integer(eventJson, "messageType"));
             Message body = Message.parse(type, eventJson.getAsJsonObject("messageBody"));
-            Member member = client.fetchMember(islandId, dodoId);
+            Member member;
+            if (StringUtils.isEmpty(islandId)) {
+                member = null;
+            } else {
+                member = client.fetchMember(islandId, dodoId);
+            }
 
             PersonalMessageEvent event = new PersonalMessageEvent(id, timestamp, islandId, dodoId, nickname, avatarUrl, sex, member,
                     messageId, type, body);
@@ -205,7 +209,7 @@ public class EventManager {
         if (!handlers.containsKey(eventClass))
             return;
         for (Entry<Method, Object> entry : handlers.get(eventClass)) {
-            CompletableFuture.runAsync(()->{
+            CompletableFuture.runAsync(() -> {
                 try {
                     entry.getKey().invoke(entry.getValue(), event);
                 } catch (IllegalAccessException | InvocationTargetException e) {

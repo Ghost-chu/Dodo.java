@@ -25,6 +25,14 @@ repositories {
 shadowJar {
     archiveBaseName.set(project.name+"-"+project.version)
     archiveClassifier.set('shadowJar')
+
+    relocate 'com.google.common', 'net.deechael.dodo.shade.com.google.common'
+    relocate 'org.yaml', 'net.deechael.dodo.shade.org.yaml'
+    relocate 'org.apache', 'net.deechael.dodo.shade.org.apache'
+    relocate 'com.mojang', 'net.deechael.dodo.shade.com.mojang'
+    relocate 'kong.unirest', 'net.deechael.dodo.shade.kong.unirest'
+    relocate 'org.checkerframework', 'net.deechael.dodo.shade.org.checkerframework'
+    relocate 'org.java_websocket', 'net.deechael.dodo.shade.org.java_websocket'
 }
 
 publishing {
@@ -40,15 +48,15 @@ publishing {
 }
 
 tasks.named('shadowJar', ShadowJar) {
-    enableRelocation true
-    relocationPrefix "net.deechael.dodo.shade"
+   // enableRelocation true
+   // relocationPrefix "net.deechael.dodo.shade"
+
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
     implementation 'com.google.code.gson:gson:2.9.0' // Json
-    implementation 'org.slf4j:slf4j-api:2.0.9' // Logging
     implementation 'org.yaml:snakeyaml:1.30' // Configuration
     implementation 'commons-lang:commons-lang:2.6' // Utils
     implementation 'com.google.guava:guava:31.1-jre' // Utils
@@ -60,7 +68,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:24.1.0'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
-    implementation 'org.slf4j:slf4j-jdk14:2.0.9'
+    implementation 'org.slf4j:slf4j-jdk14:2.0.9' // Logging
 
 
 

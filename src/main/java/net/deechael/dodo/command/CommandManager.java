@@ -3,9 +3,9 @@ package net.deechael.dodo.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.deechael.dodo.api.MessageContext;
+import net.deechael.dodo.utils.LoggerUtils;
 import net.deechael.dodo.utils.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class CommandManager {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
+    private final static Logger LOGGER = LoggerUtils.getLogger(CommandManager.class);
 
     private final CommandDispatcher<MessageContext> commandDispatcher;
 
