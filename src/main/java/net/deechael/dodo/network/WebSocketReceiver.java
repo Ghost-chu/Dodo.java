@@ -122,7 +122,6 @@ public class WebSocketReceiver {
         @Override
         public void onMessage(String message) {
             JsonObject object = JsonParser.parseString(message).getAsJsonObject();
-            LOGGER.info(object.toString());
             if (object.get("type").getAsInt() != 0)
                 return;
             try {
