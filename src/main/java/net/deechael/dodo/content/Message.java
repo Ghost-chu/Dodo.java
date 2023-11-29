@@ -7,10 +7,6 @@ import net.deechael.dodo.types.MessageType;
 
 public interface Message {
 
-    JsonElement get();
-
-    MessageType getType();
-
     static Message parse(MessageType type, String content) {
         return parse(type, JsonParser.parseString(content).getAsJsonObject());
     }
@@ -22,7 +18,10 @@ public interface Message {
             String url = object.get("url").getAsString();
             int width = object.get("width").getAsInt();
             int height = object.get("height").getAsInt();
-            int original = object.get("isOriginal").getAsInt();
+            int original = 0;
+            if (object.has("isOriginal")) {
+                original = object.get("isOriginal").getAsInt();
+            }
             ImageMessage message = new ImageMessage(url, width, height);
             message.setOriginal(original == 1);
             return message;
@@ -48,5 +47,9 @@ public interface Message {
         }
         return null;
     }
+
+    JsonElement get();
+
+    MessageType getType();
 
 }
