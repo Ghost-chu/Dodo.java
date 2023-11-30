@@ -41,15 +41,15 @@ public class Requester {
         HttpRequest request;
         if (Objects.equals(route.getContentType(), "multipart/form-data")) {
             request = Unirest.post(API.BASE_URL + route.getRoute())
-                    .headers(headers)
+                    .headersReplace(headers)
                     .connectTimeout(15*1000)
-                    .socketTimeout(15*1000)
+                    .socketTimeout(60*1000)
                     .field("file", route.getFile(), "multipart/form-data");
         } else {
             request = Unirest.post(API.BASE_URL + route.getRoute())
-                    .headers(headers)
+                    .headersReplace(headers)
                     .connectTimeout(15*1000)
-                    .socketTimeout(15*1000)
+                    .socketTimeout(30*1000)
                     .contentType("application/json")
                     .body(gson.toJson(route.getParams()));
         }
