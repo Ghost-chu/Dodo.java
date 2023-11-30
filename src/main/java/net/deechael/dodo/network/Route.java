@@ -45,7 +45,7 @@ public class Route {
             this.file = (File) value;
             if (!file.exists())
                 return this;
-            this.headers.put("Content-Length", "" + file.length());
+            //this.headers.put("Content-Length", "" + file.length());
             this.contentType = "multipart/form-data";
         } else {
             if (value instanceof JsonElement) {
