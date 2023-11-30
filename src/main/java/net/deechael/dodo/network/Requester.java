@@ -42,7 +42,7 @@ public class Requester {
         if (Objects.equals(route.getContentType(), "multipart/form-data")) {
             request = Unirest.post(API.BASE_URL + route.getRoute())
                     .headersReplace(headers)
-                    .connectTimeout(15*1000)
+                    .connectTimeout(60*1000)
                     .socketTimeout(60*1000)
                     .field("file", route.getFile(), "multipart/form-data");
         } else {
