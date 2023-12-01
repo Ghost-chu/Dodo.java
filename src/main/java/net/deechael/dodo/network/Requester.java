@@ -33,7 +33,7 @@ public class Requester {
     public JsonObject executeRequest(Route route) {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Authorization", "Bot " + getClientId() + "." + getToken());
-        headers.put("Content-type", route.getContentType());
+        //headers.put("Content-type", route.getContentType());
         Map<String, String> routeHeaders = route.getHeaders();
         for (String key : routeHeaders.keySet()) {
             headers.put(key, routeHeaders.get(key));
