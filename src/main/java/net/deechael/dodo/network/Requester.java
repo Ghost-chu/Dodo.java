@@ -40,14 +40,14 @@ public class Requester {
         }
         HttpRequest request;
         if (Objects.equals(route.getContentType(), "multipart/form-data")) {
+            headers.clear();
+            headers.put("Authorization", "Bot " + getClientId() + "." + getToken());
             request = Unirest.post(API.BASE_URL + route.getRoute())
-                    .headersReplace(headers)
-                    .connectTimeout(60*1000)
-                    .socketTimeout(60*1000)
-                    .field("file", route.getFile(), "multipart/form-data");
+                    .headers(headers)
+                    .field("file", route.getFile(), route.getFile().getName());
         } else {
             request = Unirest.post(API.BASE_URL + route.getRoute())
-                    .headersReplace(headers)
+                    .headers(headers)
                     .connectTimeout(15*1000)
                     .socketTimeout(30*1000)
                     .contentType("application/json")
@@ -58,7 +58,7 @@ public class Requester {
             JsonObject object = JsonParser.parseString(Objects.requireNonNull(req.getBody())).getAsJsonObject();
             if (object.get("status").getAsInt() != 0) {
                 LOGGER.warn("Dodo error when executing " + route.getRoute() + " with params " + gson.toJson(route.getParams())
-                        , new RuntimeException(object.get("message").getAsString()));
+                        , new RuntimeException(object.toString()));
             }
             return object;
         }
